@@ -1,0 +1,67 @@
+{
+  "target_os": "Cross-Physical-Host 3 QNX 8.0.0 Guests (Local Windows + OCI VM1 KVM + OCI VM2 KVM)",
+  "host_placement": {
+    "qnx-zone-a": "Local Windows QEMU QNX 8.0.0 (-smp 2 -m 1G)",
+    "qnx-zone-b": "OCI VM1 (198.51.100.1) QEMU+KVM QNX 8.0.0 (-smp 2 -m 512M)",
+    "qnx-zone-c": "OCI VM2 (198.51.100.2) QEMU+KVM QNX 8.0.0 (-smp 2 -m 512M)"
+  },
+  "seed": 101,
+  "pace_wall_clock": true,
+  "runs": [
+    {
+      "n_vehicles": 60,
+      "mode": "cooperative",
+      "fault_enabled": true,
+      "qnx_hosts": {
+        "qnx-zone-a": {
+          "os": "QNX",
+          "release": "8.0.0",
+          "pid": 4509711
+        },
+        "qnx-zone-b": {
+          "os": "QNX",
+          "release": "8.0.0",
+          "pid": 4624409
+        },
+        "qnx-zone-c": {
+          "os": "QNX",
+          "release": "8.0.0",
+          "pid": 4620311
+        }
+      },
+      "collisions": 0,
+      "completed_trips": 60,
+      "unsafe_cmds_detected": 0,
+      "total_wait_s": 453.9,
+      "low_speed_approach_steps": 5702,
+      "harsh_brakes": 1254,
+      "max_concurrent_active": 60,
+      "cz_peaks": {
+        "j1": 23,
+        "j2": 21,
+        "j3": 22
+      },
+      "total_steps": 1023,
+      "step_elapsed_p50_ms": 203.0,
+      "step_elapsed_p95_ms": 297.0,
+      "step_elapsed_p99_ms": 375.0,
+      "step_elapsed_max_ms": 1140.0,
+      "deadline_misses": 988,
+      "max_consecutive_misses": 255,
+      "deadline_miss_rate_pct": 96.58,
+      "rx_queue_depth_max": 42,
+      "partition_drops": 258,
+      "delayed_burst_sent": 2,
+      "stale_dropped_total": 20,
+      "tx_gw_rx_reconciled": true,
+      "recovery_denominator_count": 8,
+      "intent_ready_covered_count": 8,
+      "coop_recovered_covered_count": 8,
+      "recovery_coverage_complete": true,
+      "t_intent_ready_p95_ms": 100.0,
+      "t_intent_ready_max_ms": 100.0,
+      "t_phys_clear_to_coop_p95_ms": 100.0,
+      "t_phys_clear_to_coop_max_ms": 100.0
+    }
+  ]
+}

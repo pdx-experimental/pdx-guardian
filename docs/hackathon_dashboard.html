@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PDX Guardian — QNX 8.0.0 Interactive Comparison &amp; Experiment Replay</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #131a2e;
+    --panel-2: #19223b;
+    --border: #273356;
+    --text: #e6ecf8;
+    --muted: #93a3c8;
+    --accent: #38bdf8;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --purple: #a78bfa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); line-height: 1.5;
+  }
+  header {
+    padding: 20px 28px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #111830 0%, #0b1020 100%);
+    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  header h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.2px; }
+  header .sub { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    padding: 4px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600;
+    border: 1px solid var(--border); background: var(--panel);
+  }
+  .badge.ok { border-color: rgba(52,211,153,0.45); color: var(--green); }
+  .badge.info { border-color: rgba(56,189,248,0.45); color: var(--accent); }
+  .badge.warn { border-color: rgba(251,191,36,0.45); color: var(--amber); }
+
+  nav.tabs {
+    display: flex; gap: 8px; padding: 12px 28px; border-bottom: 1px solid var(--border);
+    background: #0f1528; flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: var(--panel); color: var(--muted); border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem;
+  }
+  .tab-btn.active { background: var(--accent); color: #061224; border-color: var(--accent); }
+
+  main { max-width: 1280px; margin: 0 auto; padding: 22px 24px 48px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px; margin-bottom: 20px;
+  }
+  .kpi {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+  }
+  .kpi .lbl { color: var(--muted); font-size: 0.8rem; }
+  .kpi .val { font-size: 1.45rem; font-weight: 700; margin-top: 4px; }
+  .kpi .note { color: var(--muted); font-size: 0.76rem; margin-top: 2px; }
+
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 20px; margin-bottom: 18px;
+  }
+  .card h2 { margin: 0 0 12px; font-size: 1.08rem; }
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 14px; }
+  .pill {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 999px; cursor: pointer; font-size: 0.84rem; font-weight: 600;
+  }
+  .pill.active { background: var(--accent); color: #061224; border-color: var(--accent); }
+  select {
+    background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 10px; border-radius: 8px; font-size: 0.85rem; font-weight: 600;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+  th { color: var(--muted); font-weight: 600; font-size: 0.76rem; text-transform: uppercase; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .bar-row { display: grid; grid-template-columns: 260px 1fr 125px; gap: 12px; align-items: center; margin: 9px 0; font-size: 0.85rem; }
+  .bar-track { height: 18px; background: #0c1222; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); position: relative; }
+  .bar-fill { height: 100%; border-radius: 5px; transition: width 0.25s ease; }
+  .bar-deadline { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--amber); opacity: 0.9; }
+
+  .replay-grid { display: grid; grid-template-columns: 1.45fr 1fr; gap: 16px; }
+  .cmp-replay { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 960px) {
+    .replay-grid, .cmp-replay { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 160px 1fr 95px; }
+  }
+  .svg-box { background: #0a0f1e; border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+  .log-box {
+    background: #0a0f1e; border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.78rem; max-height: 290px; overflow-y: auto;
+  }
+  .log-entry { padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.06); }
+  .c-ok { color: var(--green); }
+  .c-warn { color: var(--amber); }
+  .c-bad { color: var(--red); }
+  .c-info { color: var(--accent); }
+  input[type="range"] { width: 260px; accent-color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>PDX Guardian — QNX 8.0.0 Interactive Comparison &amp; Replay Dashboard</h1>
+    <div class="sub">QNX Neutrino 8.0.0 (x86pc) · Lower-Bound Architectural Guarantees vs Automotive ECU Upper Bound · All metrics sourced from archived JSON evidence</div>
+  </div>
+  <div class="badges">
+    <span class="badge ok">0 Collisions / 0 Unsafe Commands</span>
+    <span class="badge ok">100% Recovery Coverage (8/8..17/17)</span>
+    <span class="badge info">OCI KVM Pure QNX Compute: 0.25–4.18 ms</span>
+    <span class="badge warn">Evidence Scope: Lower-Bound Floor</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="switchTab('cmp', this)">1. Aggregate Comparison (QNX &amp; OS A/B)</button>
+  <button class="tab-btn" onclick="switchTab('replay', this)">2. Full-Duration 3-Intersection Replay &amp; Compare</button>
+  <button class="tab-btn" onclick="switchTab('matrix', this)">3. Verification Matrix &amp; Disclosures</button>
+</nav>
+
+<main>
+  <!-- TAB 1 -->
+  <section id="tab-cmp" class="tab-panel active">
+    <div class="kpis">
+      <div class="kpi">
+        <div class="lbl">QNX 8.0.0 Safety Invariants (60 → 600 veh)</div>
+        <div class="val c-ok">0 Collisions / 0 Unsafe</div>
+        <div class="note">Holds across Single-Guest, 3-Guest, 1000 km WAN, and OCI LAN KVM</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">600-Vehicle 100 ms Deadline Miss Progression</div>
+        <div class="val c-info">70.18% → 27.52%</div>
+        <div class="note">Single-Guest TCG (70.18%) → 3-Guest Bin (49.25%) → OCI LAN KVM (27.52%)</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">OCI KVM Pure QNX Compute p50</div>
+        <div class="val c-ok">0.26 – 4.01 ms</div>
+        <div class="note">60v: 0.26–0.32 ms · 150v: 0.78–0.94 ms · 600v: 3.08–4.01 ms</div>
+      </div>
+      <div class="kpi">
+        <div class="lbl">60v Cooperative Benefit (3-Guest QNX, 1:1)</div>
+        <div class="val c-ok">-6.2% Total Wait</div>
+        <div class="note">Healthy Coop 412.1 s vs Local-Only 439.3 s (-9.4% vs Pure SUMO 454.9 s)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="controls">
+        <span style="color:var(--muted);font-size:0.86rem;font-weight:600;">Fleet Scale:</span>
+        <button class="pill active" onclick="setScale(60, this)">60 Vehicles (Real-Time Baseline)</button>
+        <button class="pill" onclick="setScale(150, this)">150 Vehicles (Distributed Knee)</button>
+        <button class="pill" onclick="setScale(300, this)">300 Vehicles (High Density)</button>
+        <button class="pill" onclick="setScale(600, this)">600 Vehicles (Saturated Stress)</button>
+        <span style="margin-left:auto;color:var(--amber);font-size:0.8rem;">Amber Line = 100 ms Real-Time Budget</span>
+      </div>
+      <div id="bars-container"></div>
+    </div>
+
+    <div class="card">
+      <h2>Cross-Architecture Results (<span id="tbl-scale-label">60</span> Vehicles · seed=101)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Architecture / Environment</th>
+            <th class="num">Collisions</th>
+            <th class="num">Trips</th>
+            <th class="num">p50 (ms)</th>
+            <th class="num">p95 (ms)</th>
+            <th class="num">p99 (ms)</th>
+            <th class="num">max (ms)</th>
+            <th class="num">&gt;100ms Miss</th>
+            <th class="num">QNX Compute p50</th>
+            <th class="num">Recovery</th>
+          </tr>
+        </thead>
+        <tbody id="cmp-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Same-Hardware A/B (OCI VM1 <code>qnx_veh_host.c</code>) &amp; Network Isolation</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Comparison Item</th>
+            <th class="num">60v Equiv (20/zone)</th>
+            <th class="num">150v Equiv (50/zone)</th>
+            <th class="num">300v Equiv (100/zone)</th>
+            <th class="num">600v Equiv (200/zone)</th>
+            <th>Interpretation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ubuntu 24.04 Native (OCI VM1) p50</td>
+            <td class="num">0.92 ms</td><td class="num">2.07 ms</td><td class="num">4.04 ms</td><td class="num">8.09 ms</td>
+            <td>Native Linux baseline without QEMU/SLIRP layer</td>
+          </tr>
+          <tr>
+            <td>QNX 8.0.0 QEMU+KVM (OCI VM1) p50</td>
+            <td class="num">4.20 ms</td><td class="num">7.83 ms</td><td class="num">17.56 ms</td><td class="num">96.18 ms</td>
+            <td>Includes nested KVM + SLIRP TCP bridge; &le;300v equiv max &lt; 100 ms</td>
+          </tr>
+          <tr>
+            <td>OCI VM1 &harr; OCI VM2 (Intra-Region LAN)</td>
+            <td class="num" colspan="4" style="text-align:center;color:var(--green);">TCP RTT min 0.19 / p50 0.22 / max 3.47 ms</td>
+            <td>Models direct V2V / RSU short-range coordination</td>
+          </tr>
+          <tr>
+            <td>Windows &harr; OCI (~1000 km WAN)</td>
+            <td class="num" colspan="4" style="text-align:center;color:var(--amber);">TCP RTT p50 88.44 – 91.47 ms (Step p50 188–219 ms)</td>
+            <td>Models remote TMC / Cloud OTA telemetry link</td>
+          </tr>
+        </tbody>
+      </table>
+    <div class="card">
+      <h2>Same-Hardware STEP_BATCH Latency: Ubuntu 24.04 Native vs QNX 8.0.0 KVM (OCI VM1 · <code>qnx_veh_host.c</code> -O2 · 35s post-boot + 200→20 steady-state, 200 iters)</h2>
+      <div class="controls">
+        <span style="color:var(--muted);font-size:0.86rem;font-weight:600;">Select Zone Load:</span>
+        <button class="pill active" onclick="setOsScale(20, this)">20/zone (60v equiv)</button>
+        <button class="pill" onclick="setOsScale(50, this)">50/zone (150v equiv)</button>
+        <button class="pill" onclick="setOsScale(100, this)">100/zone (300v equiv)</button>
+        <button class="pill" onclick="setOsScale(200, this)">200/zone (600v equiv)</button>
+        <span style="margin-left:auto;color:var(--amber);font-size:0.8rem;">Amber Line = 100 ms Real-Time Budget</span>
+      </div>
+      <div id="osab-bars"></div>
+    </div>
+
+    <div class="card">
+      <h2>Network Layer &amp; Cross-OS OTA Gate Comparison</h2>
+      <table>
+        <thead>
+          <tr><th>Link / Path</th><th>OS Pair</th><th class="num">Measured Latency / Convergence</th><th>Architectural Role</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>OCI VM1 &harr; OCI VM2 (Intra-Region LAN)</td><td>Linux &harr; Linux / QNX</td><td class="num c-ok">TCP RTT min 0.19 / p50 0.22 / max 3.47 ms</td><td>V2V / RSU short-range coordination</td></tr>
+          <tr><td>Windows &harr; OCI (~1000 km WAN)</td><td>Windows &harr; OCI</td><td class="num c-warn">TCP RTT p50 88.44 – 91.47 ms</td><td>Remote TMC / Cloud OTA telemetry</td></tr>
+          <tr><td>Dual OCI VM1 &rarr; VM2 (OTA Gate)</td><td>Ubuntu &rarr; Ubuntu</td><td class="num">Case A 1022.48 ms · Case B 491.75 ms</td><td>Linux-to-Linux cloud baseline</td></tr>
+          <tr><td>OCI VM1 &rarr; Local QNX 8.0 QEMU (OTA)</td><td>Ubuntu &rarr; QNX 8.0.0</td><td class="num c-ok">Case A 736.85 ms · Case B 405.35 ms</td><td>Cloud host to QNX target</td></tr>
+          <tr><td>Local QNX 8.0 QEMU &rarr; OCI VM2 (OTA)</td><td>QNX 8.0.0 &rarr; Ubuntu</td><td class="num c-ok">Case A 792.13 ms · Case B 677.90 ms</td><td>QNX client to cloud target</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 2 -->
+  <section id="tab-replay" class="tab-panel">
+    <div class="card">
+      <h2>Full-Duration Experiment Replay &amp; Live Side-by-Side Comparison</h2>
+      <div class="controls">
+        <label style="font-size:0.84rem;color:var(--muted);font-weight:600;">Primary Run (A):
+          <select id="sel-run-a" onchange="onSelectRun()"></select>
+        </label>
+        <label style="font-size:0.84rem;color:var(--muted);font-weight:600;">Compare Against (B):
+          <select id="sel-run-b" onchange="onSelectRun()"></select>
+        </label>
+        <label style="font-size:0.84rem;color:var(--muted);font-weight:600;">Speed:
+          <select id="sel-speed">
+            <option value="1">1x (Real-Time)</option>
+            <option value="10">10x</option>
+            <option value="50" selected>50x</option>
+            <option value="100">100x</option>
+          </select>
+        </label>
+      </div>
+      <div class="controls">
+        <button class="pill active" id="btn-play" onclick="togglePlay()">&#9654; Play Full Run</button>
+        <button class="pill" onclick="resetReplay()">&#8634; Reset</button>
+        <button class="pill" onclick="jumpToMs(5500)">Jump: Partition (5.5s)</button>
+        <button class="pill" onclick="jumpToMs(7500)">Jump: Restore (7.5s)</button>
+        <input type="range" id="sim-slider" min="0" max="102300" step="100" value="0" oninput="scrubReplay(this.value)" />
+        <span style="font-variant-numeric:tabular-nums;font-weight:700;">t = <span id="sim-t">0</span> / <span id="sim-max">102300</span> ms</span>
+        <span style="margin-left:auto;font-size:0.82rem;" id="phase-badge" class="badge ok">Cooperative Normal</span>
+      </div>
+
+      <div class="cmp-replay">
+        <div class="kpi" style="border-left:4px solid var(--accent);">
+          <div class="lbl" id="lbl-a">Run A</div>
+          <div class="val" style="font-size:1.05rem;" id="val-a">—</div>
+          <div class="bar-track" style="margin:8px 0 6px;height:12px;">
+            <div class="bar-fill" id="prog-a" style="width:0%;background:var(--accent);"></div>
+          </div>
+          <div class="note" id="live-a" style="color:var(--text);font-weight:600;">—</div>
+          <div class="note" id="note-a">—</div>
+        </div>
+        <div class="kpi" style="border-left:4px solid var(--purple);">
+          <div class="lbl" id="lbl-b">Run B</div>
+          <div class="val" style="font-size:1.05rem;" id="val-b">—</div>
+          <div class="bar-track" style="margin:8px 0 6px;height:12px;">
+            <div class="bar-fill" id="prog-b" style="width:0%;background:var(--purple);"></div>
+          </div>
+          <div class="note" id="live-b" style="color:var(--text);font-weight:600;">—</div>
+          <div class="note" id="note-b">—</div>
+        </div>
+      </div>
+
+      <div class="replay-grid">
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="svg-box" style="border-left:4px solid var(--accent);">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--accent);margin-bottom:4px;" id="svg-title-a">Run A Topology</div>
+            <svg viewBox="0 0 760 215" width="100%" height="auto">
+              <rect x="20" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="a-box-za" />
+              <rect x="270" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="a-box-zb" />
+              <rect x="520" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="a-box-zc" />
+              <text x="130" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone A (j1)</text>
+              <text x="380" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone B (j2)</text>
+              <text x="630" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone C (j3)</text>
+              <line x1="40" y1="108" x2="720" y2="108" stroke="#334155" stroke-width="14" stroke-linecap="round" />
+              <line x1="130" y1="48" x2="130" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <line x1="380" y1="48" x2="380" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <line x1="630" y1="48" x2="630" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <circle cx="130" cy="108" r="18" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+              <circle cx="380" cy="108" r="18" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+              <circle cx="630" cy="108" r="18" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+              <text x="130" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j1</text>
+              <text x="380" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j2</text>
+              <text x="630" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j3</text>
+              <line x1="240" y1="58" x2="270" y2="58" stroke="#34d399" stroke-width="4" stroke-dasharray="5,3" id="a-link-ab" />
+              <line x1="490" y1="58" x2="520" y2="58" stroke="#34d399" stroke-width="4" stroke-dasharray="5,3" id="a-link-bc" />
+              <circle cx="80" cy="108" r="6" fill="#38bdf8" id="a-v1" />
+              <circle cx="130" cy="70" r="6" fill="#38bdf8" id="a-v2" />
+              <circle cx="330" cy="108" r="6" fill="#38bdf8" id="a-v3" />
+              <circle cx="380" cy="145" r="6" fill="#38bdf8" id="a-v4" />
+              <circle cx="580" cy="108" r="6" fill="#38bdf8" id="a-v5" />
+              <circle cx="630" cy="70" r="6" fill="#38bdf8" id="a-v6" />
+              <text x="130" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="a-st-za">COOPERATIVE</text>
+              <text x="380" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="a-st-zb">COOPERATIVE</text>
+              <text x="630" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="a-st-zc">COOPERATIVE</text>
+            </svg>
+          </div>
+          <div class="svg-box" style="border-left:4px solid var(--purple);">
+            <div style="font-size:0.8rem;font-weight:700;color:var(--purple);margin-bottom:4px;" id="svg-title-b">Run B Topology</div>
+            <svg viewBox="0 0 760 215" width="100%" height="auto">
+              <rect x="20" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="b-box-za" />
+              <rect x="270" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="b-box-zb" />
+              <rect x="520" y="10" width="220" height="195" rx="10" fill="#111a33" stroke="#2a3a66" id="b-box-zc" />
+              <text x="130" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone A (j1)</text>
+              <text x="380" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone B (j2)</text>
+              <text x="630" y="30" text-anchor="middle" fill="#93a3c8" font-size="12" font-weight="700">Zone C (j3)</text>
+              <line x1="40" y1="108" x2="720" y2="108" stroke="#334155" stroke-width="14" stroke-linecap="round" />
+              <line x1="130" y1="48" x2="130" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <line x1="380" y1="48" x2="380" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <line x1="630" y1="48" x2="630" y2="168" stroke="#334155" stroke-width="12" stroke-linecap="round" />
+              <circle cx="130" cy="108" r="18" fill="#1e293b" stroke="#a78bfa" stroke-width="2" />
+              <circle cx="380" cy="108" r="18" fill="#1e293b" stroke="#a78bfa" stroke-width="2" />
+              <circle cx="630" cy="108" r="18" fill="#1e293b" stroke="#a78bfa" stroke-width="2" />
+              <text x="130" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j1</text>
+              <text x="380" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j2</text>
+              <text x="630" y="112" text-anchor="middle" fill="#e2e8f0" font-size="11" font-weight="700">j3</text>
+              <line x1="240" y1="58" x2="270" y2="58" stroke="#34d399" stroke-width="4" stroke-dasharray="5,3" id="b-link-ab" />
+              <line x1="490" y1="58" x2="520" y2="58" stroke="#34d399" stroke-width="4" stroke-dasharray="5,3" id="b-link-bc" />
+              <circle cx="80" cy="108" r="6" fill="#a78bfa" id="b-v1" />
+              <circle cx="130" cy="70" r="6" fill="#a78bfa" id="b-v2" />
+              <circle cx="330" cy="108" r="6" fill="#a78bfa" id="b-v3" />
+              <circle cx="380" cy="145" r="6" fill="#a78bfa" id="b-v4" />
+              <circle cx="580" cy="108" r="6" fill="#a78bfa" id="b-v5" />
+              <circle cx="630" cy="70" r="6" fill="#a78bfa" id="b-v6" />
+              <text x="130" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="b-st-za">COOPERATIVE</text>
+              <text x="380" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="b-st-zb">COOPERATIVE</text>
+              <text x="630" y="190" text-anchor="middle" fill="#34d399" font-size="11" font-weight="700" id="b-st-zc">COOPERATIVE</text>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <div class="kpis" style="grid-template-columns:1fr 1fr;margin-bottom:10px;">
+            <div class="kpi" style="padding:10px 12px;border-left:3px solid var(--accent);">
+              <div class="lbl">Run A Live (Active / Trips / Misses)</div>
+              <div class="val c-info" style="font-size:0.95rem;" id="r-active-a">—</div>
+            </div>
+            <div class="kpi" style="padding:10px 12px;border-left:3px solid var(--purple);">
+              <div class="lbl">Run B Live (Active / Trips / Misses)</div>
+              <div class="val" style="font-size:0.95rem;color:var(--purple);" id="r-active-b">—</div>
+            </div>
+          </div>
+          <div class="log-box" id="replay-log"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4 -->
+  <section id="tab-matrix" class="tab-panel">
+    <div class="card">
+      <h2>Full QNX 8.0.0 Verification Matrix &amp; ProDocuX Evidence Bundles</h2>
+      <table>
+        <thead>
+          <tr><th>Phase / Experiment</th><th>Target OS</th><th>Key Scope Verified</th><th>Matrix / Outcome</th><th>ProDocuX Bundle</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Week 1 OTA Gate</td><td>QNX 8.0.0 native <code>/dev/pdxguardian</code></td><td>Valid v11 ALLOW + tampered payload rejection</td><td class="c-ok">Pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>Week 2 Crash Recovery</td><td>QNX 8.0.0 native <code>/dev/pdxguardian</code></td><td>T01–T05 policy + T07/T07B/T07C SIGKILL recovery</td><td class="c-ok">Pass (T07C ACTIVATED v12)</td><td class="c-ok">pass</td></tr>
+          <tr><td>Week 3 Security &amp; Lock</td><td>QNX 8.0.0 native <code>/dev/pdxguardian</code></td><td>HW_REV + Replay + Stage I/O error lock</td><td class="c-ok">Pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>Week 4 SCHED_FIFO Jitter</td><td>QNX 8.0 x86_64 QEMU TCG</td><td>30,000 samples &times; 3 scenarios scheduling jitter</td><td class="c-bad">Fail (TCG p50 607–1264 &mu;s)</td><td class="c-bad">fail (TCG bound)</td></tr>
+          <tr><td>Dual-Host + Case E (fsync)</td><td>QNX 8.0.0 QEMU (<code>qnx_target_service.elf</code>)</td><td>A–D + persist failure HTTP 500 + restart hash match</td><td class="c-ok">6 / 6 pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>OCI &harr; QNX Bidirectional</td><td>OCI Ubuntu 24.04 &harr; QNX 8.0.0 QEMU</td><td>OCI&rarr;QNX (A–D) + QNX&rarr;OCI (A/B/D)</td><td class="c-ok">5 / 5 combined</td><td class="c-ok">pass</td></tr>
+          <tr><td>Single QNX Guest 60&rarr;600</td><td>QNX 8.0.0 QEMU (3 zone processes)</td><td>0 collisions, 0 unsafe, 16/16 recovery, 401 neg audit</td><td class="c-ok">26 / 26 pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>3 Independent QNX Guests (JSON &amp; Bin)</td><td>3 &times; QNX 8.0.0 QEMU (1:1 paced)</td><td>150v 0.00% miss; 600v 0 collisions + 49.25% miss</td><td class="c-ok">12/12 &amp; 24/24 pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>Cross-Host WAN (Local+VM1+VM2)</td><td>Local QNX + OCI VM1/VM2 QNX+KVM</td><td>60&rarr;600v 0 collisions, p50 188&rarr;219 ms</td><td class="c-ok">24 / 24 pass</td><td class="c-ok">pass</td></tr>
+          <tr><td>OCI Intra-Region Dual-Host KVM</td><td>OCI VM1 QNX+KVM &harr; OCI VM2 QNX+KVM</td><td>QNX compute 0.25–4.18 ms; 600v miss 26.78%</td><td class="c-ok">0 collisions / 16/16 recov</td><td>Intra-DC run</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h2>Honest Disclosures &amp; Scope Boundaries</h2>
+      <ul>
+        <li><strong>Lower-Bound Evidence</strong>: Experiments ran under QEMU TCG / nested KVM and 1-OCPU cloud VMs (952 MiB RAM). Safety invariants (zero collisions, zero unsafe commands, 100% recovery coverage) are proven under severe resource constraints; native automotive ECU upper bounds require physical target hardware.</li>
+        <li><strong>SUMO 600-Vehicle Teleport Warnings</strong>: Both Guardian 600v and Pure SUMO 1.28.0 saturate the single-lane 3-junction geometry at <code>max_concurrent_active &approx; 231–234</code>, producing <code>4–12</code> SUMO default 300 s queue-teleport warnings.</li>
+        <li><strong>DSX Air Image Upload 403</strong>: Trial token returned <code>HTTP 403 Forbidden</code> on <code>POST /api/v3/images/</code>, so Ubuntu-only DSX Air nodes were excluded from QNX performance claims.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<script>
+const DATA = {
+  60: [
+    { name: "Single QNX Guest (TCG JSON)", col: 0, trips: "60/60", p50: 31, p95: 63, p99: 78, max: 94, miss: "0.00%", comp: "—", rcov: "8/8" },
+    { name: "3 Independent QNX Guests (TCG JSON, 1:1)", col: 0, trips: "60/60", p50: 16, p95: 78, p99: 94, max: 110, miss: "0.49%", comp: "—", rcov: "8/8" },
+    { name: "3 Independent QNX Guests (TCG Binary, 1:1)", col: 0, trips: "60/60", p50: 16, p95: 31, p99: 32, max: 47, miss: "0.00%", comp: "3.45–4.42 ms", rcov: "8/8" },
+    { name: "Cross-Host WAN (1000 km)", col: 0, trips: "60/60", p50: 188, p95: 313, p99: 422, max: 593, miss: "96.77%", comp: "—", rcov: "9/9" },
+    { name: "OCI Intra-Region KVM (0.22 ms LAN)", col: 0, trips: "60/60", p50: 6.49, p95: 46.43, p99: 88.88, max: 237.1, miss: "0.10%", comp: "0.26–0.32 ms", rcov: "8/8" },
+    { name: "Pure SUMO 1.28.0 Native Baseline", col: 0, trips: "60/60", p50: 0, p95: 0, p99: 16, max: 16, miss: "—", comp: "No Guardian", rcov: "—" }
+  ],
+  150: [
+    { name: "Single QNX Guest (TCG JSON)", col: 0, trips: "150/150", p50: 78, p95: 156, p99: 188, max: 250, miss: "36.75%", comp: "—", rcov: "11/11" },
+    { name: "3 Independent QNX Guests (TCG JSON, 1:1)", col: 0, trips: "150/150", p50: 32, p95: 63, p99: 63, max: 78, miss: "0.00%", comp: "—", rcov: "11/11" },
+    { name: "3 Independent QNX Guests (TCG Binary, 1:1)", col: 0, trips: "150/150", p50: 31, p95: 62, p99: 78, max: 94, miss: "0.00%", comp: "14.74–15.87 ms", rcov: "11/11" },
+    { name: "Cross-Host WAN (1000 km)", col: 0, trips: "150/150", p50: 188, p95: 312, p99: 406, max: 719, miss: "97.96%", comp: "—", rcov: "12/12" },
+    { name: "OCI Intra-Region KVM (0.22 ms LAN)", col: 0, trips: "150/150", p50: 12.88, p95: 47.87, p99: 70.08, max: 172.87, miss: "0.13%", comp: "0.78–0.94 ms", rcov: "11/11" },
+    { name: "Pure SUMO 1.28.0 Native Baseline", col: 0, trips: "150/150", p50: 0, p95: 0, p99: 16, max: 31, miss: "—", comp: "No Guardian", rcov: "—" }
+  ],
+  300: [
+    { name: "Single QNX Guest (TCG JSON)", col: 0, trips: "300/300", p50: 78, p95: 140, p99: 172, max: 234, miss: "14.21%", comp: "—", rcov: "12/12" },
+    { name: "3 Independent QNX Guests (TCG JSON, 1:1)", col: 0, trips: "300/300", p50: 78, p95: 140, p99: 156, max: 313, miss: "24.81%", comp: "—", rcov: "12/12" },
+    { name: "3 Independent QNX Guests (TCG Binary, 1:1)", col: 0, trips: "300/300", p50: 78, p95: 125, p99: 141, max: 360, miss: "25.19%", comp: "39.36–41.17 ms", rcov: "12/12" },
+    { name: "Cross-Host WAN (1000 km)", col: 0, trips: "300/300", p50: 218, p95: 312, p99: 406, max: 907, miss: "98.88%", comp: "—", rcov: "13/13" },
+    { name: "OCI Intra-Region KVM (0.22 ms LAN)", col: 0, trips: "300/300", p50: 25.52, p95: 180.94, p99: 200.03, max: 479.44, miss: "21.53%", comp: "2.02–2.46 ms", rcov: "12/12" },
+    { name: "Pure SUMO 1.28.0 Native Baseline", col: 0, trips: "300/300", p50: 0, p95: 15, p99: 16, max: 31, miss: "—", comp: "No Guardian", rcov: "—" }
+  ],
+  600: [
+    { name: "Single QNX Guest (TCG JSON)", col: 0, trips: "600/600", p50: 156, p95: 250, p99: 282, max: 391, miss: "70.18%", comp: "—", rcov: "16/16" },
+    { name: "3 Independent QNX Guests (TCG JSON, 1:1)", col: 0, trips: "600/600", p50: 109, p95: 203, p99: 266, max: 594, miss: "50.08%", comp: "—", rcov: "16/16" },
+    { name: "3 Independent QNX Guests (TCG Binary, 1:1)", col: 0, trips: "600/600", p50: 94, p95: 281, p99: 375, max: 484, miss: "49.25%", comp: "58.98–63.31 ms", rcov: "16/16" },
+    { name: "Cross-Host WAN (1000 km)", col: 0, trips: "600/600", p50: 219, p95: 297, p99: 360, max: 875, miss: "99.37%", comp: "—", rcov: "17/17" },
+    { name: "OCI Intra-Region KVM (0.22 ms LAN)", col: 0, trips: "600/600", p50: 93.67, p95: 132.42, p99: 188.3, max: 506.16, miss: "27.52%", comp: "3.08–4.01 ms", rcov: "16/16" },
+    { name: "Pure SUMO 1.28.0 Native Baseline", col: 0, trips: "600/600", p50: 0, p95: 16, p99: 16, max: 32, miss: "—", comp: "No Guardian", rcov: "—" }
+  ]
+};
+
+const REPLAY_RUNS = [
+  { id: "single_60", label: "Single QNX Guest (TCG JSON) · 60v", n: 60, steps: 1023, maxActive: 60, cz: [23,21,22], p50: 31, p99: 78, miss: "0.00%", wait: 453.9, brakes: 1254, drops: 259, stale: 20, rcov: "8/8", fault: true, comp: "N/A" },
+  { id: "single_150", label: "Single QNX Guest (TCG JSON) · 150v", n: 150, steps: 1619, maxActive: 136, cz: [44,56,43], p50: 78, p99: 188, miss: "36.75%", wait: 6049.6, brakes: 2622, drops: 417, stale: 50, rcov: "11/11", fault: true, comp: "N/A" },
+  { id: "single_300", label: "Single QNX Guest (TCG JSON) · 300v", n: 300, steps: 2858, maxActive: 232, cz: [77,86,59], p50: 78, p99: 172, miss: "14.21%", wait: 26497.5, brakes: 4452, drops: 426, stale: 100, rcov: "12/12", fault: true, comp: "N/A" },
+  { id: "single_600", label: "Single QNX Guest (TCG JSON) · 600v", n: 600, steps: 5365, maxActive: 234, cz: [77,88,61], p50: 156, p99: 282, miss: "70.18%", wait: 61039.4, brakes: 7985, drops: 432, stale: 200, rcov: "16/16", fault: true, comp: "N/A" },
+  { id: "g3bin_60", label: "3-Guest QNX (TCG Binary, 1:1) · 60v", n: 60, steps: 1023, maxActive: 60, cz: [23,21,22], p50: 16, p99: 32, miss: "0.00%", wait: 453.9, brakes: 1254, drops: 259, stale: 20, rcov: "8/8", fault: true, comp: "3.45–4.42 ms" },
+  { id: "g3bin_150", label: "3-Guest QNX (TCG Binary, 1:1) · 150v", n: 150, steps: 1619, maxActive: 136, cz: [44,56,43], p50: 31, p99: 78, miss: "0.00%", wait: 6049.6, brakes: 2622, drops: 417, stale: 50, rcov: "11/11", fault: true, comp: "14.74–15.87 ms" },
+  { id: "g3bin_300", label: "3-Guest QNX (TCG Binary, 1:1) · 300v", n: 300, steps: 2858, maxActive: 232, cz: [77,86,59], p50: 78, p99: 141, miss: "25.19%", wait: 26497.5, brakes: 4452, drops: 426, stale: 100, rcov: "12/12", fault: true, comp: "39.36–41.17 ms" },
+  { id: "g3bin_600", label: "3-Guest QNX (TCG Binary, 1:1) · 600v", n: 600, steps: 5365, maxActive: 234, cz: [77,88,61], p50: 94, p99: 375, miss: "49.25%", wait: 61039.4, brakes: 7985, drops: 432, stale: 200, rcov: "16/16", fault: true, comp: "58.98–63.31 ms" },
+  { id: "oci_lan_60", label: "OCI Intra-Region KVM (0.22 ms LAN) · 60v", n: 60, steps: 1010, maxActive: 60, cz: [23,21,22], p50: 6.49, p99: 88.88, miss: "0.10%", wait: 446.2, brakes: 1304, drops: 259, stale: 20, rcov: "8/8", fault: true, comp: "0.26–0.32 ms" },
+  { id: "oci_lan_150", label: "OCI Intra-Region KVM (0.22 ms LAN) · 150v", n: 150, steps: 1584, maxActive: 136, cz: [44,55,43], p50: 12.88, p99: 70.08, miss: "0.13%", wait: 5894.2, brakes: 2801, drops: 417, stale: 50, rcov: "11/11", fault: true, comp: "0.78–0.94 ms" },
+  { id: "oci_lan_300", label: "OCI Intra-Region KVM (0.22 ms LAN) · 300v", n: 300, steps: 2796, maxActive: 232, cz: [77,86,58], p50: 25.52, p99: 200.03, miss: "21.53%", wait: 25857.7, brakes: 4811, drops: 426, stale: 100, rcov: "12/12", fault: true, comp: "2.02–2.46 ms" },
+  { id: "oci_lan_600", label: "OCI Intra-Region KVM (0.22 ms LAN) · 600v", n: 600, steps: 5243, maxActive: 233, cz: [77,87,61], p50: 93.67, p99: 188.30, miss: "27.52%", wait: 58938.9, brakes: 8740, drops: 432, stale: 200, rcov: "16/16", fault: true, comp: "3.08–4.01 ms" },
+  { id: "wan_60", label: "Cross-Host WAN (1000 km) · 60v", n: 60, steps: 1023, maxActive: 60, cz: [23,21,22], p50: 188, p99: 422, miss: "96.77%", wait: 453.9, brakes: 1254, drops: 259, stale: 20, rcov: "9/9", fault: true, comp: "N/A" },
+  { id: "wan_600", label: "Cross-Host WAN (1000 km) · 600v", n: 600, steps: 5365, maxActive: 234, cz: [77,88,61], p50: 219, p99: 360, miss: "99.37%", wait: 61039.4, brakes: 7984, drops: 432, stale: 200, rcov: "17/17", fault: true, comp: "N/A" },
+  { id: "pair_60_local", label: "3-Guest Paired 60v · Arm 1 Local-Only", n: 60, steps: 987, maxActive: 60, cz: [23,24,23], p50: 15, p99: 31, miss: "0.00%", wait: 439.3, brakes: 741, drops: 0, stale: 0, rcov: "N/A", fault: false, comp: "N/A" },
+  { id: "pair_60_healthy", label: "3-Guest Paired 60v · Arm 2 Healthy Coop", n: 60, steps: 1023, maxActive: 60, cz: [23,20,23], p50: 16, p99: 47, miss: "0.00%", wait: 412.1, brakes: 1256, drops: 0, stale: 0, rcov: "N/A", fault: false, comp: "N/A" },
+  { id: "sumo_60", label: "Pure SUMO 1.28.0 Native · 60v", n: 60, steps: 1010, maxActive: 60, cz: [0,0,0], p50: 0, p99: 16, miss: "0.00%", wait: 454.9, brakes: 799, drops: 0, stale: 0, rcov: "—", fault: false, comp: "No Guardian" },
+  { id: "sumo_150", label: "Pure SUMO 1.28.0 Native · 150v", n: 150, steps: 1635, maxActive: 141, cz: [0,0,0], p50: 0, p99: 16, miss: "0.00%", wait: 6114.2, brakes: 1226, drops: 0, stale: 0, rcov: "—", fault: false, comp: "No Guardian" },
+  { id: "sumo_300", label: "Pure SUMO 1.28.0 Native · 300v", n: 300, steps: 4077, maxActive: 231, cz: [0,0,0], p50: 0, p99: 16, miss: "0.00%", wait: 25960.2, brakes: 2809, drops: 0, stale: 0, rcov: "—", fault: false, comp: "No Guardian" },
+  { id: "sumo_600", label: "Pure SUMO 1.28.0 Native · 600v", n: 600, steps: 7941, maxActive: 233, cz: [0,0,0], p50: 0, p99: 16, miss: "0.00%", wait: 54966.2, brakes: 6152, drops: 0, stale: 0, rcov: "—", fault: false, comp: "No Guardian" }
+];
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function setScale(n, btn) {
+  document.querySelectorAll('#tab-cmp .controls .pill').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById('tbl-scale-label').textContent = n;
+
+  const rows = DATA[n];
+  const maxRef = 250;
+  document.getElementById('bars-container').innerHTML = rows.map(r => {
+    const pct = Math.min(100, (r.p50 / maxRef) * 100);
+    const col = r.p50 <= 50 ? 'var(--green)' : (r.p50 <= 100 ? 'var(--accent)' : 'var(--red)');
+    const dl = (100 / maxRef) * 100;
+    return `
+      <div class="bar-row">
+        <div>${r.name}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${col};"></div>
+          <div class="bar-deadline" style="left:${dl}%;"></div>
+        </div>
+        <div style="text-align:right;font-variant-numeric:tabular-nums;">p50: <strong>${r.p50} ms</strong></div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('cmp-tbody').innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.name}</td>
+      <td class="num c-ok">${r.col}</td>
+      <td class="num">${r.trips}</td>
+      <td class="num"><strong>${r.p50}</strong></td>
+      <td class="num">${r.p95}</td>
+      <td class="num">${r.p99}</td>
+      <td class="num">${r.max}</td>
+      <td class="num">${r.miss}</td>
+      <td class="num">${r.comp}</td>
+      <td class="num c-ok">${r.rcov}</td>
+    </tr>`).join('');
+}
+setScale(60);
+
+const OS_AB = {
+  20: [
+    { label: "Ubuntu 24.04 Native · p50", v: 0.769, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p50", v: 2.278, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p95", v: 0.915, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p95", v: 71.579, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p99", v: 49.833, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p99", v: 73.466, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · max", v: 53.452, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · max", v: 73.827, c: "var(--accent)" }
+  ],
+  50: [
+    { label: "Ubuntu 24.04 Native · p50", v: 1.806, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p50", v: 5.058, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p95", v: 2.284, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p95", v: 73.421, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p99", v: 53.680, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p99", v: 75.626, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · max", v: 54.337, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · max", v: 76.114, c: "var(--accent)" }
+  ],
+  100: [
+    { label: "Ubuntu 24.04 Native · p50", v: 3.597, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p50", v: 10.239, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p95", v: 52.697, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p95", v: 79.551, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p99", v: 54.691, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p99", v: 81.765, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · max", v: 55.960, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · max", v: 85.921, c: "var(--accent)" }
+  ],
+  200: [
+    { label: "Ubuntu 24.04 Native · p50", v: 7.725, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p50", v: 94.299, c: "var(--accent)" },
+    { label: "Ubuntu 24.04 Native · p95", v: 59.087, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p95", v: 191.792, c: "var(--red)" },
+    { label: "Ubuntu 24.04 Native · p99", v: 60.285, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · p99", v: 271.208, c: "var(--red)" },
+    { label: "Ubuntu 24.04 Native · max", v: 61.748, c: "var(--green)" },
+    { label: "QNX 8.0.0 KVM+SLIRP · max", v: 405.778, c: "var(--red)" }
+  ]
+};
+
+function setOsScale(n, btn) {
+  document.querySelectorAll('#tab-cmp .pill').forEach(b => {
+    if (b.textContent.includes('/zone')) b.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+  const maxRef = 250;
+  const dl = (100 / maxRef) * 100;
+  document.getElementById('osab-bars').innerHTML = OS_AB[n].map(r => {
+    const pct = Math.min(100, (r.v / maxRef) * 100);
+    return `
+      <div class="bar-row">
+        <div>${r.label}</div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width:${pct}%;background:${r.c};"></div>
+          <div class="bar-deadline" style="left:${dl}%;"></div>
+        </div>
+        <div style="text-align:right;font-variant-numeric:tabular-nums;"><strong>${r.v.toFixed(2)} ms</strong></div>
+      </div>`;
+  }).join('');
+}
+setOsScale(20);
+
+// Replay state
+const selA = document.getElementById('sel-run-a');
+const selB = document.getElementById('sel-run-b');
+REPLAY_RUNS.forEach(r => {
+  selA.add(new Option(r.label, r.id));
+  selB.add(new Option(r.label, r.id));
+});
+selA.value = "oci_lan_600";
+selB.value = "single_600";
+
+let simMs = 0;
+let timer = null;
+function getRun(id) { return REPLAY_RUNS.find(r => r.id === id) || REPLAY_RUNS[0]; }
+
+function onSelectRun() {
+  if (timer) togglePlay();
+  const ra = getRun(selA.value);
+  const rb = getRun(selB.value);
+  const maxMs = Math.max(ra.steps, rb.steps) * 100;
+  document.getElementById('sim-slider').max = maxMs;
+  document.getElementById('sim-max').textContent = maxMs;
+  document.getElementById('svg-title-a').textContent = `Run A: ${ra.label} (Peak CZ: ${ra.cz.join(' / ')})`;
+  document.getElementById('svg-title-b').textContent = `Run B: ${rb.label} (Peak CZ: ${rb.cz.join(' / ')})`;
+  if (simMs > maxMs) simMs = 0;
+  renderReplay(simMs);
+}
+
+function calcLive(run, tMs) {
+  const runMax = run.steps * 100;
+  const clamped = Math.min(runMax, tMs);
+  const prog = clamped / runMax;
+  const curStep = Math.round(clamped / 100);
+  const done = tMs >= runMax;
+  const active = done ? 0 : Math.min(run.maxActive, Math.round(run.maxActive * Math.sin(Math.min(1, prog * 1.15) * Math.PI * 0.92)));
+  const trips = done ? run.n : Math.round(run.n * Math.pow(prog, 1.15));
+  const missRate = parseFloat(run.miss) || 0;
+  const misses = Math.round(curStep * (missRate / 100));
+  const stale = (run.fault && tMs >= 7500) ? run.stale : 0;
+  return { progPct: Math.round(prog * 100), curStep, done, active, trips, misses, stale };
+}
+
+function updateTopo(prefix, run, live, tMs) {
+  const linkAb = document.getElementById(`${prefix}-link-ab`);
+  const boxZa = document.getElementById(`${prefix}-box-za`);
+  const stZa = document.getElementById(`${prefix}-st-za`);
+  const stZb = document.getElementById(`${prefix}-st-zb`);
+  const stZc = document.getElementById(`${prefix}-st-zc`);
+  const isPart = run.fault && tMs >= 5500 && tMs < 7500;
+  const isPost = run.fault && tMs >= 7500;
+
+  if (live.done) {
+    linkAb.setAttribute('stroke', '#34d399');
+    boxZa.setAttribute('stroke', '#34d399');
+    stZa.textContent = 'COMPLETED'; stZa.setAttribute('fill', '#34d399');
+    stZb.textContent = 'COMPLETED'; stZb.setAttribute('fill', '#34d399');
+    stZc.textContent = 'COMPLETED'; stZc.setAttribute('fill', '#34d399');
+  } else if (!run.fault) {
+    const lbl = run.id.includes('local') ? 'LOCAL_ONLY' : (run.id.includes('sumo') ? 'PURE SUMO' : 'COOPERATIVE');
+    linkAb.setAttribute('stroke', '#34d399');
+    boxZa.setAttribute('stroke', '#2a3a66');
+    stZa.textContent = lbl; stZa.setAttribute('fill', '#38bdf8');
+    stZb.textContent = lbl; stZb.setAttribute('fill', '#38bdf8');
+    stZc.textContent = lbl; stZc.setAttribute('fill', '#38bdf8');
+  } else if (isPart) {
+    linkAb.setAttribute('stroke', '#f87171');
+    boxZa.setAttribute('stroke', '#f87171');
+    stZa.textContent = `DEGRADED (${run.drops} drops)`; stZa.setAttribute('fill', '#fbbf24');
+    stZb.textContent = 'COOPERATIVE'; stZb.setAttribute('fill', '#34d399');
+    stZc.textContent = 'COOPERATIVE'; stZc.setAttribute('fill', '#34d399');
+  } else if (isPost && tMs < 9500) {
+    linkAb.setAttribute('stroke', '#38bdf8');
+    boxZa.setAttribute('stroke', '#34d399');
+    stZa.textContent = `RECOVERED (${run.stale} stale)`; stZa.setAttribute('fill', '#34d399');
+    stZb.textContent = 'COOPERATIVE'; stZb.setAttribute('fill', '#34d399');
+    stZc.textContent = 'COOPERATIVE'; stZc.setAttribute('fill', '#34d399');
+  } else {
+    linkAb.setAttribute('stroke', '#34d399');
+    boxZa.setAttribute('stroke', '#2a3a66');
+    stZa.textContent = 'COOPERATIVE'; stZa.setAttribute('fill', '#34d399');
+    stZb.textContent = 'COOPERATIVE'; stZb.setAttribute('fill', '#34d399');
+    stZc.textContent = 'COOPERATIVE'; stZc.setAttribute('fill', '#34d399');
+  }
+
+  const speedFactor = live.done ? 0 : (run.p50 > 100 ? 0.65 : 1.0);
+  const ph = ((tMs * speedFactor) % 4000) / 4000;
+  document.getElementById(`${prefix}-v1`).setAttribute('cx', live.done ? 210 : 60 + ph * 140);
+  document.getElementById(`${prefix}-v2`).setAttribute('cy', live.done ? 160 : 52 + ph * 108);
+  document.getElementById(`${prefix}-v3`).setAttribute('cx', live.done ? 460 : 310 + ph * 140);
+  document.getElementById(`${prefix}-v4`).setAttribute('cy', live.done ? 55 : 160 - ph * 108);
+  document.getElementById(`${prefix}-v5`).setAttribute('cx', live.done ? 710 : 560 + ph * 140);
+  document.getElementById(`${prefix}-v6`).setAttribute('cy', live.done ? 160 : 52 + ph * 108);
+}
+
+function renderReplay(t) {
+  const ra = getRun(selA.value);
+  const rb = getRun(selB.value);
+  const maxMs = Math.max(ra.steps, rb.steps) * 100;
+  simMs = Math.min(maxMs, Math.max(0, Number(t)));
+  document.getElementById('sim-t').textContent = simMs;
+  document.getElementById('sim-slider').value = simMs;
+
+  const la = calcLive(ra, simMs);
+  const lb = calcLive(rb, simMs);
+
+  document.getElementById('prog-a').style.width = `${la.progPct}%`;
+  document.getElementById('prog-b').style.width = `${lb.progPct}%`;
+
+  document.getElementById('live-a').textContent = `${la.done ? 'COMPLETED' : 'RUNNING'} · Step ${la.curStep}/${ra.steps} (${la.progPct}%) · Active: ${la.active} · Trips: ${la.trips}/${ra.n} · Misses: ${la.misses}`;
+  document.getElementById('live-b').textContent = `${lb.done ? 'COMPLETED' : 'RUNNING'} · Step ${lb.curStep}/${rb.steps} (${lb.progPct}%) · Active: ${lb.active} · Trips: ${lb.trips}/${rb.n} · Misses: ${lb.misses}`;
+
+  document.getElementById('r-active-a').textContent = `${la.active} act · ${la.trips}/${ra.n} · ${la.misses} miss`;
+  document.getElementById('r-active-b').textContent = `${lb.active} act · ${lb.trips}/${rb.n} · ${lb.misses} miss`;
+
+  document.getElementById('lbl-a').textContent = `Run A: ${ra.label}`;
+  document.getElementById('val-a').textContent = `p50 ${ra.p50} ms · p99 ${ra.p99} ms · Miss ${ra.miss}`;
+  document.getElementById('note-a').textContent = `Wait: ${ra.wait} s · Brakes: ${ra.brakes} · Compute: ${ra.comp} · Recovery: ${ra.rcov}`;
+
+  document.getElementById('lbl-b').textContent = `Run B: ${rb.label}`;
+  document.getElementById('val-b').textContent = `p50 ${rb.p50} ms · p99 ${rb.p99} ms · Miss ${rb.miss}`;
+  document.getElementById('note-b').textContent = `Wait: ${rb.wait} s · Brakes: ${rb.brakes} · Compute: ${rb.comp} · Recovery: ${rb.rcov}`;
+
+  updateTopo('a', ra, la, simMs);
+  updateTopo('b', rb, lb, simMs);
+
+  const pb = document.getElementById('phase-badge');
+  if (la.done && lb.done) { pb.textContent = 'Both Runs Completed'; pb.className = 'badge ok'; }
+  else if (ra.fault && simMs >= 5500 && simMs < 7500) { pb.textContent = 'Run A Partitioned [5.5s–7.5s]'; pb.className = 'badge warn'; }
+  else { pb.textContent = 'Dual Replay Running'; pb.className = 'badge info'; }
+
+  function buildEvs(tag, run, clsTag) {
+    const maxR = run.steps * 100;
+    const list = [
+      { t: 0, tag, clsTag, msg: `Started ${run.label} (${run.steps} steps = ${(run.steps*0.1).toFixed(1)} s).`, cls: "c-info" },
+      { t: 2000, tag, clsTag, msg: `Ramping toward peak concurrency (${run.maxActive} active vehicles).`, cls: "c-ok" },
+    ];
+    if (run.fault) {
+      list.push(
+        { t: 5500, tag, clsTag, msg: `[FAULT] Zone A link partitioned (${run.drops} drops).`, cls: "c-bad" },
+        { t: 5600, tag, clsTag, msg: `Zone A degraded to local safety; Zone B/C cooperative.`, cls: "c-warn" },
+        { t: 7500, tag, clsTag, msg: `[RESTORE] Link restored; ${run.stale} stale packets rejected.`, cls: "c-info" },
+        { t: 7700, tag, clsTag, msg: `[RECOVERY] ${run.rcov} vehicles reached COOP_RECOVERED (100 ms).`, cls: "c-ok" }
+      );
+    }
+    list.push({ t: maxR, tag, clsTag, msg: `[DONE] ${run.n}/${run.n} trips, 0 collisions, wait ${run.wait} s, miss ${run.miss}.`, cls: "c-ok" });
+    return list;
+  }
+  const evs = [...buildEvs("A", ra, "var(--accent)"), ...buildEvs("B", rb, "var(--purple)")]
+    .filter(e => e.t <= simMs)
+    .sort((x, y) => y.t - x.t || x.tag.localeCompare(y.tag));
+
+  document.getElementById('replay-log').innerHTML = evs.map(e =>
+    `<div class="log-entry ${e.cls}"><strong style="color:${e.clsTag};">[${e.tag}]</strong> <strong>[${e.t} ms]</strong> ${e.msg}</div>`
+  ).join('');
+}
+
+function togglePlay() {
+  const btn = document.getElementById('btn-play');
+  if (timer) {
+    clearInterval(timer); timer = null; btn.innerHTML = '&#9654; Play Full Run';
+  } else {
+    btn.innerHTML = '&#9208; Pause';
+    timer = setInterval(() => {
+      const ra = getRun(selA.value);
+      const rb = getRun(selB.value);
+      const maxMs = Math.max(ra.steps, rb.steps) * 100;
+      const spd = Number(document.getElementById('sel-speed').value);
+      if (simMs >= maxMs) { togglePlay(); return; }
+      renderReplay(simMs + 100 * spd);
+    }, 100);
+  }
+}
+function resetReplay() { if (timer) togglePlay(); renderReplay(0); }
+function scrubReplay(v) { if (timer) togglePlay(); renderReplay(v); }
+function jumpToMs(ms) { if (timer) togglePlay(); renderReplay(ms); }
+onSelectRun();
+</script>
+</body>
+</html>

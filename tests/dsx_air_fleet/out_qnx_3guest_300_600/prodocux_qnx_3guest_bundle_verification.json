@@ -1,0 +1,129 @@
+{
+  "schema_version": "prodocux_evidence_bundle_result_v1",
+  "request_id": "req-ac3b6a5dd467ff50",
+  "canonical_request_sha256": "3d5d8a3396a9f329c4e9f6cefe7d86341c99b541e73d8b1a81af6c13e7297120",
+  "verifier": {
+    "id": "prodocux.evidence_bundle",
+    "version": "1"
+  },
+  "rule_set": {
+    "id": "pdx-guardian-qnx-3guest",
+    "version": "1.0.0",
+    "sha256": "73450fae198535a53e03e816868888cb4b23e14b70a131a6479bc7bb455ec4c9"
+  },
+  "status": "pass",
+  "results": [
+    {
+      "check_id": "chk-300-qnx",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-300-qnx"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-300-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-300-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-300-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-300-trip"
+      ],
+      "expected": "300.0..300.0",
+      "actual": 300,
+      "details": {}
+    },
+    {
+      "check_id": "chk-300-rcov",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-300-rcov"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-600-qnx",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-600-qnx"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-600-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-600-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-600-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-600-trip"
+      ],
+      "expected": "600.0..600.0",
+      "actual": 600,
+      "details": {}
+    },
+    {
+      "check_id": "chk-600-rcov",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-600-rcov"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    }
+  ]
+}

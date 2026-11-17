@@ -1,0 +1,69 @@
+{
+  "public_key_hex": "7d1f0d1f1133b05f65e075aa4a687d8bccc31efd521db6fcc72e34bea7b3f8fa",
+  "cases": [
+    {
+      "case_id": "T01",
+      "operation_id": "op-wk2-t01-valid-v11",
+      "target_version": 11,
+      "firmware_file": "t01_fw_v11.bin",
+      "manifest_file": "t01_manifest_v11.bin",
+      "firmware_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0"
+    },
+    {
+      "case_id": "T02",
+      "operation_id": "op-wk2-t02-tamper-v12",
+      "target_version": 12,
+      "firmware_file": "t02_fw_v12_tampered.bin",
+      "manifest_file": "t02_manifest_v12.bin",
+      "firmware_sha256": "7c4127f27db386581b7aabbad14f945ed5c1b16c0f4422e60c28842dccd6dd4a"
+    },
+    {
+      "case_id": "T03",
+      "operation_id": "op-wk2-t03-badsig-v12",
+      "target_version": 12,
+      "firmware_file": "t03_fw_v12.bin",
+      "manifest_file": "t03_manifest_v12_badsig.bin",
+      "firmware_sha256": "c9cb204fad2036e346093d4cb2061d953b2d673b5dad5bfa538745292aabb9f1"
+    },
+    {
+      "case_id": "T04",
+      "operation_id": "op-wk2-t04-rollback-v09",
+      "target_version": 9,
+      "firmware_file": "t04_fw_v09.bin",
+      "manifest_file": "t04_manifest_v09.bin",
+      "firmware_sha256": "7b65111dbfd18a4fadc46a59cf21a6f0ad15e06546e598be29965cfe2b310a7c"
+    },
+    {
+      "case_id": "T05",
+      "operation_id": "op-wk2-t05-speed-v12",
+      "target_version": 12,
+      "firmware_file": "t05_fw_v12.bin",
+      "manifest_file": "t05_manifest_v12.bin",
+      "firmware_sha256": "4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"
+    },
+    {
+      "case_id": "T07",
+      "operation_id": "op-wk2-t07-crash-v12",
+      "target_version": 12,
+      "firmware_file": "t07_fw_v12.bin",
+      "manifest_file": "t07_manifest_v12.bin",
+      "firmware_sha256": "40be2692d56d5311dfe66f92e0b1a6105dd2488aefbe3241d328d27243b1bf9d"
+    },
+    {
+      "case_id": "T07B",
+      "operation_id": "op-wk2-t07b-rename-v12",
+      "target_version": 12,
+      "firmware_file": "t07b_fw_v12.bin",
+      "manifest_file": "t07b_manifest_v12.bin",
+      "firmware_sha256": "2bd23943e0ab14b5a8b4a5f06e72ce3f5bf6a1539ddf20d2740416f91ccab994"
+    },
+    {
+      "case_id": "T07C",
+      "operation_id": "op-wk2-t07c-ver-v12",
+      "target_version": 12,
+      "firmware_file": "t07c_fw_v12.bin",
+      "manifest_file": "t07c_manifest_v12.bin",
+      "firmware_sha256": "cc96065a9ef05dfe6a2271dd8f9f39bca657c4daf0af2ca87ef29f14bf1103be"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# Docker build ignore
+qnx-os/
+.git
+.github
+build/
+bin/
+docs/internal/
+*.log
+*.pem
+*.key
+evidence/
+reports/

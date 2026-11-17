@@ -1,0 +1,62 @@
+{
+  "environment": "Pure SUMO 1.28.0 Native (no Guardian)",
+  "seed": 101,
+  "runs": [
+    {
+      "n_vehicles": 60,
+      "mode": "pure_sumo_native",
+      "collisions": 0,
+      "completed_trips": 60,
+      "total_wait_s": 454.9,
+      "harsh_brakes": 799,
+      "max_concurrent_active": 60,
+      "total_steps": 1010,
+      "step_elapsed_p50_ms": 0.0,
+      "step_elapsed_p95_ms": 0.0,
+      "step_elapsed_p99_ms": 16.0,
+      "step_elapsed_max_ms": 16.0
+    },
+    {
+      "n_vehicles": 150,
+      "mode": "pure_sumo_native",
+      "collisions": 0,
+      "completed_trips": 150,
+      "total_wait_s": 6114.2,
+      "harsh_brakes": 1226,
+      "max_concurrent_active": 141,
+      "total_steps": 1635,
+      "step_elapsed_p50_ms": 0.0,
+      "step_elapsed_p95_ms": 0.0,
+      "step_elapsed_p99_ms": 16.0,
+      "step_elapsed_max_ms": 31.0
+    },
+    {
+      "n_vehicles": 300,
+      "mode": "pure_sumo_native",
+      "collisions": 0,
+      "completed_trips": 300,
+      "total_wait_s": 25960.2,
+      "harsh_brakes": 2809,
+      "max_concurrent_active": 231,
+      "total_steps": 4077,
+      "step_elapsed_p50_ms": 0.0,
+      "step_elapsed_p95_ms": 15.0,
+      "step_elapsed_p99_ms": 16.0,
+      "step_elapsed_max_ms": 31.0
+    },
+    {
+      "n_vehicles": 600,
+      "mode": "pure_sumo_native",
+      "collisions": 0,
+      "completed_trips": 600,
+      "total_wait_s": 54966.2,
+      "harsh_brakes": 6152,
+      "max_concurrent_active": 233,
+      "total_steps": 7941,
+      "step_elapsed_p50_ms": 0.0,
+      "step_elapsed_p95_ms": 16.0,
+      "step_elapsed_p99_ms": 16.0,
+      "step_elapsed_max_ms": 32.0
+    }
+  ]
+}

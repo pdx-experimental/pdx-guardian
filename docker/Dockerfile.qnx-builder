@@ -1,0 +1,31 @@
+# PDX Guardian QNX 8.0 Builder & Verification Container
+# NOTE: QNX SDP 8.0 is NEVER copied into this image layer (EULA compliance).
+# Mount your QNX SDP 8.0 root as read-only (-v <QNX_SDP_ROOT>:/opt/qnx800:ro) at runtime.
+
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
+    ca-certificates \
+    cmake \
+    ninja-build \
+    make \
+    gcc \
+    g++ \
+    clang \
+    git \
+    file \
+    python3 \
+    python3-pip \
+    qemu-system-x86 \
+    qemu-utils \
+    openssh-client \
+    iproute2 \
+    netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+CMD ["/bin/bash"]

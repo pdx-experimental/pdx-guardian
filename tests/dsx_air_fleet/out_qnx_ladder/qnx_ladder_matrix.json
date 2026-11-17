@@ -1,0 +1,112 @@
+{
+  "schema": "prodocux.qnx_ladder.matrix.v1",
+  "status": "pass",
+  "passed": 26,
+  "total": 26,
+  "checks": [
+    {
+      "name": "ladder_60v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "ladder_60v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "ladder_60v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "ladder_60v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "ladder_60v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "ladder_60v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "ladder_150v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "ladder_300v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "ladder_600v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "600v_all_3_arms_zero_collisions_and_600_trips",
+      "passed": true
+    },
+    {
+      "name": "negative_unsafe_cmd_audit_fails_as_expected",
+      "passed": true
+    }
+  ]
+}

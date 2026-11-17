@@ -1,0 +1,32 @@
+{
+  "schema": "prodocux.qnx_crosshost.matrix.v1",
+  "status": "pass",
+  "passed": 6,
+  "total": 6,
+  "checks": [
+    {
+      "name": "crosshost_60v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "crosshost_60v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "crosshost_60v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "crosshost_60v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "crosshost_60v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "crosshost_60v_recovery_coverage_complete",
+      "passed": true
+    }
+  ]
+}

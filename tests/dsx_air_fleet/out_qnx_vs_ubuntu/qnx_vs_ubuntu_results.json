@@ -1,0 +1,92 @@
+{
+  "host_hardware": "OCI VM1 (198.51.100.1, 2 vCPU, 952 MiB RAM, /dev/kvm)",
+  "source": "qnx_veh_host.c (identical C source, -O2)",
+  "ubuntu_24_04_native": {
+    "os_info": {
+      "os": "Linux",
+      "release": "7.0.0-1013-oracle"
+    },
+    "results": [
+      {
+        "vehicles_per_zone": 200,
+        "fleet_3zone_equiv": 600,
+        "iters": 200,
+        "p50_ms": 7.725,
+        "p95_ms": 59.087,
+        "p99_ms": 60.285,
+        "max_ms": 61.748
+      },
+      {
+        "vehicles_per_zone": 100,
+        "fleet_3zone_equiv": 300,
+        "iters": 200,
+        "p50_ms": 3.597,
+        "p95_ms": 52.697,
+        "p99_ms": 54.691,
+        "max_ms": 55.96
+      },
+      {
+        "vehicles_per_zone": 50,
+        "fleet_3zone_equiv": 150,
+        "iters": 200,
+        "p50_ms": 1.806,
+        "p95_ms": 2.284,
+        "p99_ms": 53.68,
+        "max_ms": 54.337
+      },
+      {
+        "vehicles_per_zone": 20,
+        "fleet_3zone_equiv": 60,
+        "iters": 200,
+        "p50_ms": 0.769,
+        "p95_ms": 0.915,
+        "p99_ms": 49.833,
+        "max_ms": 53.452
+      }
+    ]
+  },
+  "qnx_8_0_0_kvm": {
+    "os_info": {
+      "os": "QNX",
+      "release": "8.0.0"
+    },
+    "results": [
+      {
+        "vehicles_per_zone": 200,
+        "fleet_3zone_equiv": 600,
+        "iters": 200,
+        "p50_ms": 94.299,
+        "p95_ms": 191.792,
+        "p99_ms": 271.208,
+        "max_ms": 405.778
+      },
+      {
+        "vehicles_per_zone": 100,
+        "fleet_3zone_equiv": 300,
+        "iters": 200,
+        "p50_ms": 10.239,
+        "p95_ms": 79.551,
+        "p99_ms": 81.765,
+        "max_ms": 85.921
+      },
+      {
+        "vehicles_per_zone": 50,
+        "fleet_3zone_equiv": 150,
+        "iters": 200,
+        "p50_ms": 5.058,
+        "p95_ms": 73.421,
+        "p99_ms": 75.626,
+        "max_ms": 76.114
+      },
+      {
+        "vehicles_per_zone": 20,
+        "fleet_3zone_equiv": 60,
+        "iters": 200,
+        "p50_ms": 2.278,
+        "p95_ms": 71.579,
+        "p99_ms": 73.466,
+        "max_ms": 73.827
+      }
+    ]
+  }
+}

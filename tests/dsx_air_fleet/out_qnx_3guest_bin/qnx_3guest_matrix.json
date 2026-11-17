@@ -1,0 +1,104 @@
+{
+  "schema": "prodocux.qnx_3guest.matrix.v1",
+  "status": "pass",
+  "passed": 24,
+  "total": 24,
+  "checks": [
+    {
+      "name": "3guest_60v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "3guest_60v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "3guest_60v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "3guest_60v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "3guest_60v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "3guest_60v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "3guest_150v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "3guest_300v_recovery_coverage_complete",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_hosts_are_qnx_8_0",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_zero_collisions",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_all_trips_completed",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_zero_unsafe_cmds",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_tx_gw_rx_reconciled",
+      "passed": true
+    },
+    {
+      "name": "3guest_600v_recovery_coverage_complete",
+      "passed": true
+    }
+  ]
+}

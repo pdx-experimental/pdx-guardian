@@ -1,0 +1,61 @@
+# ==========================================
+# pdx-guardian .gitignore
+# ==========================================
+
+# QNX OS binaries & setup packages (EULA restricted)
+qnx-os/
+*.run
+*.exe
+*.iso
+*.qcow2
+.export_denylist.local
+*.img
+
+# Build artifacts & binaries
+build/
+bin/
+out/
+target/
+*.o
+*.obj
+*.so
+*.a
+*.dll
+*.dylib
+*.elf
+
+# CMake temporary files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+
+# Python caches & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+*.whl
+
+# Keys & Certificates (Strictly Prohibited)
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+
+# Logs & Test outputs
+*.log
+runtime_metrics.csv
+evidence/
+reports/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

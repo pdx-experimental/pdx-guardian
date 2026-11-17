@@ -1,0 +1,608 @@
+{
+  "schema_version": "prodocux_evidence_bundle_result_v1",
+  "request_id": "req-a1826c9be4f5fa23",
+  "canonical_request_sha256": "55c81dc7f8c6d070ef8e6f9c4a69099cc098e30d283faa910ccd4f0a7cbc6d33",
+  "verifier": {
+    "id": "prodocux.evidence_bundle",
+    "version": "1"
+  },
+  "rule_set": {
+    "id": "pdx-guardian-dsx-60v",
+    "version": "1.0.0",
+    "sha256": "3df412f562912ed5f87f21373d9b856525191e3d282f1c9a367c26a4fce5bf3c"
+  },
+  "status": "pass",
+  "results": [
+    {
+      "check_id": "chk-s101-arm1-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm1-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm1-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm1-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm1-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm1-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm1-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm1-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm2-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm2-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm2-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm2-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm2-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm2-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm2-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm2-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm3-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm3-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm3-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm3-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm3-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm3-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-arm3-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-arm3-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-pdrop",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-pdrop"
+      ],
+      "expected": "1.0..inf",
+      "actual": 67,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-stale",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s101-stale"
+      ],
+      "expected": "1.0..inf",
+      "actual": 1,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s101-rcov",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-s101-rcov"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-s202-arm1-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm1-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm1-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm1-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm1-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm1-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm1-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm1-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm2-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm2-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm2-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm2-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm2-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm2-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm2-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm2-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm3-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm3-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm3-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm3-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm3-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm3-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-arm3-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-arm3-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-pdrop",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-pdrop"
+      ],
+      "expected": "1.0..inf",
+      "actual": 64,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-stale",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s202-stale"
+      ],
+      "expected": "1.0..inf",
+      "actual": 1,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s202-rcov",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-s202-rcov"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-s303-arm1-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm1-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm1-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm1-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm1-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm1-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm1-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm1-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm2-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm2-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm2-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm2-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm2-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm2-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm2-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm2-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm3-col",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm3-col"
+      ],
+      "expected": "0.0..0.0",
+      "actual": 0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm3-trip",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm3-trip"
+      ],
+      "expected": "60.0..60.0",
+      "actual": 60,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm3-p99",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm3-p99"
+      ],
+      "expected": "0.0..100.0",
+      "actual": 16.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-arm3-missrate",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-arm3-missrate"
+      ],
+      "expected": "0.0..1.0",
+      "actual": 0.0,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-pdrop",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-pdrop"
+      ],
+      "expected": "1.0..inf",
+      "actual": 70,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-stale",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-s303-stale"
+      ],
+      "expected": "1.0..inf",
+      "actual": 1,
+      "details": {}
+    },
+    {
+      "check_id": "chk-s303-rcov",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-s303-rcov"
+      ],
+      "expected": "True",
+      "actual": "True",
+      "details": {
+        "compared_count": 1
+      }
+    }
+  ]
+}

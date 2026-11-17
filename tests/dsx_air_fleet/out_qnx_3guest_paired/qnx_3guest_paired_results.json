@@ -1,0 +1,341 @@
+{
+  "target_os": "3 Independent QNX 8.0.0 x86pc QEMU Guests",
+  "seed": 101,
+  "pace_wall_clock": true,
+  "paired_arms": {
+    "60v": {
+      "arm1_local_only": {
+        "n_vehicles": 60,
+        "mode": "local_only",
+        "fault_enabled": false,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4509713
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4509715
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4464666
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 60,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 439.3,
+        "low_speed_approach_steps": 5664,
+        "harsh_brakes": 741,
+        "max_concurrent_active": 60,
+        "cz_peaks": {
+          "j1": 23,
+          "j2": 24,
+          "j3": 23
+        },
+        "total_steps": 987,
+        "step_elapsed_p50_ms": 15.0,
+        "step_elapsed_p95_ms": 16.0,
+        "step_elapsed_p99_ms": 31.0,
+        "step_elapsed_max_ms": 32.0,
+        "deadline_misses": 0,
+        "max_consecutive_misses": 0,
+        "deadline_miss_rate_pct": 0.0,
+        "rx_queue_depth_max": 0,
+        "partition_drops": 0,
+        "delayed_burst_sent": 0,
+        "stale_dropped_total": 0,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 0,
+        "intent_ready_covered_count": 0,
+        "coop_recovered_covered_count": 0,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 0.0,
+        "t_intent_ready_max_ms": 0.0,
+        "t_phys_clear_to_coop_p95_ms": 0.0,
+        "t_phys_clear_to_coop_max_ms": 0.0
+      },
+      "arm2_healthy_coop": {
+        "n_vehicles": 60,
+        "mode": "cooperative",
+        "fault_enabled": false,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4550673
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4550675
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4550671
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 60,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 412.1,
+        "low_speed_approach_steps": 5274,
+        "harsh_brakes": 1256,
+        "max_concurrent_active": 60,
+        "cz_peaks": {
+          "j1": 23,
+          "j2": 20,
+          "j3": 23
+        },
+        "total_steps": 1023,
+        "step_elapsed_p50_ms": 16.0,
+        "step_elapsed_p95_ms": 32.0,
+        "step_elapsed_p99_ms": 47.0,
+        "step_elapsed_max_ms": 47.0,
+        "deadline_misses": 0,
+        "max_consecutive_misses": 0,
+        "deadline_miss_rate_pct": 0.0,
+        "rx_queue_depth_max": 32,
+        "partition_drops": 0,
+        "delayed_burst_sent": 0,
+        "stale_dropped_total": 0,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 0,
+        "intent_ready_covered_count": 0,
+        "coop_recovered_covered_count": 0,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 0.0,
+        "t_intent_ready_max_ms": 0.0,
+        "t_phys_clear_to_coop_p95_ms": 0.0,
+        "t_phys_clear_to_coop_max_ms": 0.0
+      },
+      "arm3_fault_coop": {
+        "n_vehicles": 60,
+        "mode": "cooperative",
+        "fault_enabled": true,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4591633
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4591635
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4591631
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 60,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 453.9,
+        "low_speed_approach_steps": 5702,
+        "harsh_brakes": 1254,
+        "max_concurrent_active": 60,
+        "cz_peaks": {
+          "j1": 23,
+          "j2": 21,
+          "j3": 22
+        },
+        "total_steps": 1023,
+        "step_elapsed_p50_ms": 16.0,
+        "step_elapsed_p95_ms": 32.0,
+        "step_elapsed_p99_ms": 32.0,
+        "step_elapsed_max_ms": 47.0,
+        "deadline_misses": 0,
+        "max_consecutive_misses": 0,
+        "deadline_miss_rate_pct": 0.0,
+        "rx_queue_depth_max": 33,
+        "partition_drops": 259,
+        "delayed_burst_sent": 2,
+        "stale_dropped_total": 20,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 8,
+        "intent_ready_covered_count": 8,
+        "coop_recovered_covered_count": 8,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 100.0,
+        "t_intent_ready_max_ms": 100.0,
+        "t_phys_clear_to_coop_p95_ms": 100.0,
+        "t_phys_clear_to_coop_max_ms": 100.0
+      }
+    },
+    "150v": {
+      "arm1_local_only": {
+        "n_vehicles": 150,
+        "mode": "local_only",
+        "fault_enabled": false,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4632593
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4714515
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4632591
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 150,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 5938.3,
+        "low_speed_approach_steps": 65062,
+        "harsh_brakes": 1335,
+        "max_concurrent_active": 141,
+        "cz_peaks": {
+          "j1": 43,
+          "j2": 58,
+          "j3": 43
+        },
+        "total_steps": 1595,
+        "step_elapsed_p50_ms": 31.0,
+        "step_elapsed_p95_ms": 78.0,
+        "step_elapsed_p99_ms": 125.0,
+        "step_elapsed_max_ms": 171.0,
+        "deadline_misses": 46,
+        "max_consecutive_misses": 10,
+        "deadline_miss_rate_pct": 2.88,
+        "rx_queue_depth_max": 0,
+        "partition_drops": 0,
+        "delayed_burst_sent": 0,
+        "stale_dropped_total": 0,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 0,
+        "intent_ready_covered_count": 0,
+        "coop_recovered_covered_count": 0,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 0.0,
+        "t_intent_ready_max_ms": 0.0,
+        "t_phys_clear_to_coop_p95_ms": 0.0,
+        "t_phys_clear_to_coop_max_ms": 0.0
+      },
+      "arm2_healthy_coop": {
+        "n_vehicles": 150,
+        "mode": "cooperative",
+        "fault_enabled": false,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4755473
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4755475
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4755471
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 150,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 5934.9,
+        "low_speed_approach_steps": 64824,
+        "harsh_brakes": 2612,
+        "max_concurrent_active": 136,
+        "cz_peaks": {
+          "j1": 44,
+          "j2": 55,
+          "j3": 43
+        },
+        "total_steps": 1618,
+        "step_elapsed_p50_ms": 47.0,
+        "step_elapsed_p95_ms": 94.0,
+        "step_elapsed_p99_ms": 109.0,
+        "step_elapsed_max_ms": 141.0,
+        "deadline_misses": 22,
+        "max_consecutive_misses": 5,
+        "deadline_miss_rate_pct": 1.36,
+        "rx_queue_depth_max": 74,
+        "partition_drops": 0,
+        "delayed_burst_sent": 0,
+        "stale_dropped_total": 0,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 0,
+        "intent_ready_covered_count": 0,
+        "coop_recovered_covered_count": 0,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 0.0,
+        "t_intent_ready_max_ms": 0.0,
+        "t_phys_clear_to_coop_p95_ms": 0.0,
+        "t_phys_clear_to_coop_max_ms": 0.0
+      },
+      "arm3_fault_coop": {
+        "n_vehicles": 150,
+        "mode": "cooperative",
+        "fault_enabled": true,
+        "qnx_hosts": {
+          "qnx-zone-a": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4878353
+          },
+          "qnx-zone-b": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4796435
+          },
+          "qnx-zone-c": {
+            "os": "QNX",
+            "release": "8.0.0",
+            "pid": 4878351
+          }
+        },
+        "collisions": 0,
+        "completed_trips": 150,
+        "unsafe_cmds_detected": 0,
+        "total_wait_s": 6049.6,
+        "low_speed_approach_steps": 66045,
+        "harsh_brakes": 2622,
+        "max_concurrent_active": 136,
+        "cz_peaks": {
+          "j1": 44,
+          "j2": 56,
+          "j3": 43
+        },
+        "total_steps": 1619,
+        "step_elapsed_p50_ms": 62.0,
+        "step_elapsed_p95_ms": 141.0,
+        "step_elapsed_p99_ms": 188.0,
+        "step_elapsed_max_ms": 250.0,
+        "deadline_misses": 304,
+        "max_consecutive_misses": 24,
+        "deadline_miss_rate_pct": 18.78,
+        "rx_queue_depth_max": 63,
+        "partition_drops": 417,
+        "delayed_burst_sent": 2,
+        "stale_dropped_total": 50,
+        "tx_gw_rx_reconciled": true,
+        "recovery_denominator_count": 11,
+        "intent_ready_covered_count": 11,
+        "coop_recovered_covered_count": 11,
+        "recovery_coverage_complete": true,
+        "t_intent_ready_p95_ms": 100.0,
+        "t_intent_ready_max_ms": 100.0,
+        "t_phys_clear_to_coop_p95_ms": 100.0,
+        "t_phys_clear_to_coop_max_ms": 100.0
+      }
+    }
+  }
+}
