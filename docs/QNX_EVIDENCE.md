@@ -29,6 +29,14 @@ Before running Week 4 (`evidence/week4/qnx_week4_jitter.json`), native-hardware 
 | `same-vcpu` (CPU0 FIFO 50 vs CPU0 RR 10) | 17 | 607.16 | 1,489.91 | 127,841.20 | **FAIL** (TCG + CPU0 contention) |
 | `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | 2 | 1,263.63 | 1,943.18 | 11,208.44 | **FAIL** (TCG emulation) |
 
+Under **nested `/dev/kvm` on a 1-OCPU (2-SMT-thread) cloud VM** (`evidence/week4/qnx_week4_jitter_kvm.json`, `-enable-kvm -cpu host -smp 2 -m 512M`, `35 s` post-boot settle):
+
+| Scenario (30,000 samples) | Deadline Misses | `p50` Median (µs) | `p99` Median (µs) | Worst `max` (µs) | Pre-Frozen Gate |
+|---|---:|---:|---:|---:|---|
+| `idle` (nested KVM baseline) | 12 | 874.67 | 1,035.89 | 21,701.99 | **FAIL** (nested cloud KVM) |
+| `same-vcpu` (CPU0 FIFO 50 vs CPU0 RR 10) | 13,194 | 2,546.67 | 63,508.78 | 79,553.18 | **FAIL** (1-OCPU + `fsync` I/O) |
+| `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | 9,059 | 594.72 | 61,370.46 | 78,650.54 | **FAIL** (**4.3x** lower `p50` vs `same-vcpu`) |
+
 ---
 
 ### 3. Fleet-Scale Compute: Dedicated QNX Node vs. Shared-Host Contention
@@ -52,7 +60,8 @@ In the OCI Intra-Region (`0.22 ms` LAN) 3-QNX-Guest KVM experiment (`tests/dsx_a
 | Portable C policy & OpenSSL 3 Ed25519/SHA-256 (`T01`–`T06`, `T08`) | `simulator/fixtures/week3/*` | `gcc -Wall -Wextra -Werror -O2 -Iportable/include portable/manifest/pdx_manifest.c portable/verifier/pdx_crypto_openssl.c portable/tests/test_portable_fixtures.c -lcrypto -o /tmp/test_portable && /tmp/test_portable` |
 | Host rejection, A/B slot & ProDocuX bundle checks (8 tests) | `evidence/week2/qnx_week2_results.json` | `python host/tests/test_week2_host_rejections.py` |
 | Week 1–3 OTA gate, `T01`–`T10` fault injection & crash reconciliation | `evidence/week1/prodocux_evidence_verification.json`<br>`evidence/week2/prodocux_evidence_verification.json`<br>`evidence/week3/qnx_week3_results.json` | `python3 scripts/run_week2_e2e.py` / `scripts/run_week3_e2e.py` (with QSTI image) |
-| Week 4 `SCHED_FIFO`/`SCHED_RR` jitter (QEMU TCG) | `evidence/week4/qnx_week4_jitter.json`<br>`evidence/week4/prodocux_jitter_verification.json` | `python3 scripts/run_week4_e2e.py` (with QSTI image) |
+| Week 4 `SCHED_FIFO`/`SCHED_RR` jitter (QEMU TCG & nested `/dev/kvm`) | `evidence/week4/qnx_week4_jitter.json`<br>`evidence/week4/qnx_week4_jitter_kvm.json`<br>`evidence/week4/prodocux_jitter_verification.json` | `python3 scripts/run_week4_e2e.py` (with QSTI image) |
+| Fair KVM-vs-KVM OS A/B (QNX 8.0.0 vs Ubuntu 24.04, identical `-smp 2 -m 512M`) | `tests/dsx_air_fleet/out_qnx_vs_ubuntu/qnx_vs_ubuntu_kvm_results.json` | Run `qnx_veh_host.c` inside identical KVM guests (`200 -> 20` vehicles/zone) |
 | Cross-host & dual-VM idempotent reconciliation (`409 Conflict` host API) | `evidence/oci_dual_vm/oci_dual_vm_results_v2.json`<br>`evidence/qnx_dual_host/qnx_dual_host_results.json`<br>`evidence/qnx_oci_bidirectional/prodocux_qnx_oci_bundle_verification.json` | `python tests/qnx_dual_host/run_qnx_dual_host.py` |
 | Fleet-scale QNX 8.0 simulation (`60 -> 600` vehicles, `0` collisions) | `tests/dsx_air_fleet/out_qnx_ladder/qnx_ladder_results.json`<br>`tests/dsx_air_fleet/out_qnx_3guest_bin/qnx_3guest_results.json`<br>`tests/dsx_air_fleet/out_qnx_crosshost_600/qnx_crosshost_results.json`<br>`tests/dsx_air_fleet/out_oci_lan/qnx_oci_lan_results.json` | Open `docs/hackathon_dashboard.html` or run `python tests/dsx_air_fleet/run_qnx_3guest.py --counts 60 150 300 600 --binary` |
 | Pure SUMO baseline (no QNX toolchain required) | `tests/dsx_air_fleet/out_sumo_baseline/sumo_baseline_results.json` | `python tests/dsx_air_fleet/run_sumo_baseline.py` |

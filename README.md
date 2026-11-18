@@ -31,6 +31,8 @@ Before running `jitter_bench.c` (`qnx/ecu-simulator/jitter_bench.c`), native-har
 | `same-vcpu` (CPU0 FIFO 50 vs CPU0 RR 10) | 17 | 607.16 µs | 1,489.91 µs | 127,841.20 µs | **FAIL** (TCG + CPU0 contention) |
 | `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | 2 | 1,263.63 µs | 1,943.18 µs | 11,208.44 µs | **FAIL** (TCG emulation) |
 
+We also re-ran `jitter_bench.elf` under **nested `/dev/kvm` on a 1-OCPU (2-SMT-thread) cloud VM** (`evidence/week4/qnx_week4_jitter_kvm.json`, `35 s` post-boot settle). Under nested cloud virtualization and virtualized `fsync()` block I/O, all 3 arms still failed the bare-metal thresholds (`idle`: `12` misses, `p50 = 874.67 µs`, `p99 = 1,035.89 µs`, `max = 21,701.99 µs`; `same-vcpu`: `13,194` misses, `p50 = 2,546.67 µs`, `p99 = 63,508.78 µs`; `separated-vcpu`: `9,059` misses, `p50 = 594.72 µs`, `p99 = 61,370.46 µs`), confirming that physical bare-metal SoC hardware is required to validate sub-millisecond `µs` RTOS targets—while `separated-vcpu` reduced median wakeup jitter by **4.3×** over `same-vcpu` inside the guest.
+
 ---
 
 ### Threat Model & Fault-Injection Coverage (`T01–T10`, QNX 8.0 QEMU)
@@ -59,6 +61,7 @@ To evaluate QNX 8.0 behavior at fleet scale (`tests/dsx_air_fleet/qnx_veh_host.c
 - **Dedicated QNX Node vs. Shared-Host Contention** (`out_oci_lan/qnx_oci_lan_results.json`, `60 → 600` vehicles):
   - `qnx-zone-c` (dedicated QNX KVM VM, `-smp 2 -m 512M`): `p99 = 1.83 → 4.55 → 6.94 → 8.79 ms`
   - `qnx-zone-a / b` (shared `1-OCPU / 952 MiB` VM running SUMO + 2 QNX guests): `p99 = 85.27 ms` / `84.12 ms` at 600 vehicles (difference is host CPU contention, not QNX overhead).
+- **Fair KVM-vs-KVM Guest A/B** (`out_qnx_vs_ubuntu/qnx_vs_ubuntu_kvm_results.json`, identical `-enable-kvm -cpu host -smp 2 -m 512M`, `35 s` post-boot settle, `200 → 20` vehicles/zone): From `20–100` vehicles/zone, QNX 8.0.0 KVM (`p99 = 72.84–82.45 ms`) and Ubuntu 24.04 KVM (`p99 = 63.58–66.62 ms`) sit in the same QEMU SLIRP range; at `200` vehicles/zone, Ubuntu KVM's `virtio-net` + Linux TCP stays at `p50 = 8.67 ms / p99 = 70.96 ms` while QNX KVM reaches `p50 = 87.13 ms / p99 = 174.06 ms`. QNX's advantage is deterministic RTOS safety gating (`/dev/pdxguardian`) and `fs-qnx6` crash recovery rather than bulk JSON/TCP throughput over SLIRP.
 
 *(Fleet compute latency in `ms` is distinct from `/dev/pdxguardian` control-loop wakeup jitter in `µs`.)*
 

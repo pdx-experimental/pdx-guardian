@@ -179,6 +179,7 @@ $approvedRelativePaths = @(
     "evidence\week3\qnx_week3_results.json",
     "evidence\week3\prodocux_evidence_verification.json",
     "evidence\week4\qnx_week4_jitter.json",
+    "evidence\week4\qnx_week4_jitter_kvm.json",
     "evidence\week4\prodocux_jitter_verification.json",
     "evidence\qnx_dual_host\qnx_dual_host_results.json",
     "evidence\qnx_dual_host\qnx_dual_host_matrix.json",
@@ -210,6 +211,7 @@ $approvedRelativePaths = @(
     "tests\dsx_air_fleet\out_oci_lan\qnx_oci_lan_results.json",
     "tests\dsx_air_fleet\out_sumo_baseline\sumo_baseline_results.json",
     "tests\dsx_air_fleet\out_qnx_vs_ubuntu\qnx_vs_ubuntu_results.json",
+    "tests\dsx_air_fleet\out_qnx_vs_ubuntu\qnx_vs_ubuntu_kvm_results.json",
     "tests\dsx_air_fleet\out_60v_paced\dsx_60v_multiseed_results.json",
     "tests\dsx_air_fleet\out_60v_paced\prodocux_dsx_60v_bundle_verification.json"
 )
