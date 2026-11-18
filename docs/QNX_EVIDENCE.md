@@ -40,7 +40,7 @@ Under **nested `/dev/kvm` on a 1-OCPU (2-SMT-thread) cloud VM** (`evidence/week4
 
 Follow-up diagnostic on nested `/dev/kvm` (`evidence/week4/qnx_week4_jitter_kvm_diag.json`):
 - **`ClockPeriod()` Constraint**: Querying `ClockPeriod(CLOCK_REALTIME, ...)` on the QNX 8.0 QSTI QEMU image confirmed `cur = 1,000,000 ns` (`1 ms`), and requesting `500 / 200 / 100 / 50 µs` all returned `rc = -1, errno = 48 (ENOTSUP)`. Identical-config `idle` runs gave `p50 = 450.81` and `1,036.80 µs` (`p50 - min = 33.9–39.9 µs`).
-- **1 ms Tick-Phase Sawtooth Verification (`--phase-offset-us 0/250/500/750`, 1,000 samples each, `actual_clock_period_ns = 1,000,000`)**: `p50` shifted in a `1 ms` sawtooth (`93.08 -> 513.28 -> 825.55 -> 543.43 µs`, `p50 - min = 23.6–36.2 µs`), confirming `idle` latency was quantized to the `1 ms` tick startup phase.
+- **Phase-Offset Runs (`--phase-offset-us 0/250/500/750`, 1,000 samples each, `actual_clock_period_ns = 1,000,000`)**: Across separate startups, `p50` landed at `93.08 / 513.28 / 825.55 / 543.43 µs` (`p50 - min = 23.6–36.2 µs`), consistent with `1 ms` tick-phase quantization.
 - **`--no-fsync` (CPU-only SHA-256, 3,000 samples, `1 ms` tick)**: Without `fsync`, `separated-vcpu` missed `16%` (`479/3,000`) vs `39%` for `same-vcpu` (`1,171/3,000`); with `fsync`, `separated-vcpu` missed `30%` (`9,059/30,000`).
 
 | Diagnostic Arm | Tick | Misses | `p50` (µs) | `p99` (µs) | Worst `max` (µs) | Takeaway |
