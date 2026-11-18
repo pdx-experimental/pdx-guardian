@@ -179,7 +179,7 @@ $approvedRelativePaths = @(
     "evidence\week3\qnx_week3_results.json",
     "evidence\week3\prodocux_evidence_verification.json",
     "evidence\week4\qnx_week4_jitter.json",
-    "evidence\week4\qnx_week4_jitter_kvm.json",
+    "evidence\week4\qnx_week4_jitter_kvm_tick1ms.json",
     "evidence\week4\qnx_week4_jitter_kvm_diag.json",
     "evidence\week4\prodocux_jitter_verification.json",
     "evidence\qnx_dual_host\qnx_dual_host_results.json",

@@ -206,6 +206,7 @@ int main(int argc, char **argv) {
     mkdir(work_dir, 0755);
 
     struct _clockperiod old_cp = {0, 0};
+    struct _clockperiod cur_cp = {0, 0};
     int clock_period_changed = 0;
     if (clock_period_ns > 0) {
         struct _clockperiod new_cp = {(unsigned long)clock_period_ns, 0};
@@ -213,6 +214,9 @@ int main(int argc, char **argv) {
             clock_period_changed = 1;
         }
     }
+    ClockPeriod(CLOCK_REALTIME, NULL, &cur_cp, 0);
+    unsigned long actual_clock_period_ns = cur_cp.nsec;
+    int clock_period_ok = (clock_period_ns <= 0) || clock_period_changed;
 
     int ecu_cpu = 0;
     int worker_cpu = (strcmp(scenario, "separated-vcpu") == 0) ? 1 : 0;
@@ -357,7 +361,7 @@ int main(int argc, char **argv) {
     int worker_io_ok = (!worker_enabled) || (no_fsync ? (wargs.io_errors == 0 && wargs.sha256_iterations > 0) : (wargs.io_errors == 0 && wargs.io_write_ok > 0 && wargs.io_fsync_ok > 0));
     int config_valid = (ecu_affinity_ok && ecu_sched_ok &&
                         wargs.affinity_ok && wargs.sched_ok &&
-                        worker_io_ok && !sleep_error &&
+                        worker_io_ok && clock_period_ok && !sleep_error &&
                         completed_samples == samples)
                            ? 1
                            : 0;
@@ -391,6 +395,9 @@ int main(int argc, char **argv) {
              "  \"requested_samples\": %d,\n"
              "  \"completed_samples\": %d,\n"
              "  \"period_us\": %d,\n"
+             "  \"requested_clock_period_ns\": %ld,\n"
+             "  \"actual_clock_period_ns\": %lu,\n"
+             "  \"no_fsync\": %s,\n"
              "  \"wakeup_overruns\": %d,\n"
              "  \"ecu_deadline_misses\": %d,\n"
              "  \"min_signed_us\": %.3f,\n"
@@ -419,6 +426,8 @@ int main(int argc, char **argv) {
              worker_enabled ? wargs.actual_priority : 0,
              config_valid ? "true" : "false",
              warmup, samples, completed_samples, period_us,
+             clock_period_ns, actual_clock_period_ns,
+             no_fsync ? "true" : "false",
              wakeup_overruns, ecu_deadline_misses,
              min_signed_us, max_signed_us, mean_abs_us,
              p50_us, p95_us, p99_us, p999_us, max_abs_us,

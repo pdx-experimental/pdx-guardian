@@ -1,4 +1,12 @@
 {
+  "clock_period_probe": {
+    "current_ns": 1000000,
+    "requested_500000_ns": "rc=-1 errno=48 (Not supported)",
+    "requested_200000_ns": "rc=-1 errno=48 (Not supported)",
+    "requested_100000_ns": "rc=-1 errno=48 (Not supported)",
+    "requested_50000_ns": "rc=-1 errno=48 (Not supported)",
+    "note": "QNX 8.0 QSTI QEMU image locks ClockPeriod at 1,000,000 ns (1 ms); all diagnostic runs below executed at actual_clock_period_ns=1000000."
+  },
   "idle_1ms": {
     "scenario": "idle",
     "round": 1,
