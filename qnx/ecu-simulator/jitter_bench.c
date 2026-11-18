@@ -166,6 +166,7 @@ int main(int argc, char **argv) {
     const char *samples_csv = NULL;
     int no_fsync = 0;
     long clock_period_ns = 0;
+    long phase_offset_us = 0;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--scenario") == 0 && i + 1 < argc) {
@@ -188,6 +189,8 @@ int main(int argc, char **argv) {
             no_fsync = 1;
         } else if (strcmp(argv[i], "--clock-period-ns") == 0 && i + 1 < argc) {
             clock_period_ns = atol(argv[++i]);
+        } else if (strcmp(argv[i], "--phase-offset-us") == 0 && i + 1 < argc) {
+            phase_offset_us = atol(argv[++i]);
         }
     }
 
@@ -269,6 +272,9 @@ int main(int argc, char **argv) {
     const int64_t period_ns = (int64_t)period_us * 1000LL;
     struct timespec next_wakeup;
     clock_gettime(CLOCK_MONOTONIC, &next_wakeup);
+    if (phase_offset_us > 0) {
+        timespec_add_ns(&next_wakeup, (int64_t)phase_offset_us * 1000LL);
+    }
 
     int total = warmup + samples;
     int completed_samples = 0;
@@ -397,6 +403,7 @@ int main(int argc, char **argv) {
              "  \"period_us\": %d,\n"
              "  \"requested_clock_period_ns\": %ld,\n"
              "  \"actual_clock_period_ns\": %lu,\n"
+             "  \"phase_offset_us\": %ld,\n"
              "  \"no_fsync\": %s,\n"
              "  \"wakeup_overruns\": %d,\n"
              "  \"ecu_deadline_misses\": %d,\n"
@@ -427,6 +434,7 @@ int main(int argc, char **argv) {
              config_valid ? "true" : "false",
              warmup, samples, completed_samples, period_us,
              clock_period_ns, actual_clock_period_ns,
+             phase_offset_us,
              no_fsync ? "true" : "false",
              wakeup_overruns, ecu_deadline_misses,
              min_signed_us, max_signed_us, mean_abs_us,

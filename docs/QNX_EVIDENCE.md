@@ -39,13 +39,18 @@ Under **nested `/dev/kvm` on a 1-OCPU (2-SMT-thread) cloud VM** (`evidence/week4
 | `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | `1 ms` | 9,059 | 594.72 | 61,370.46 | 78,650.54 | **FAIL** (4.3x lower `p50`; tail unimproved) |
 
 Follow-up diagnostic on nested `/dev/kvm` (`evidence/week4/qnx_week4_jitter_kvm_diag.json`):
-- **`ClockPeriod()` Probe**: Querying `ClockPeriod(CLOCK_REALTIME, ...)` on the QNX 8.0 QSTI QEMU image confirmed `cur = 1,000,000 ns` (`1 ms`), and requesting `500 / 200 / 100 / 50 µs` all returned `rc = -1, errno = 48 (ENOTSUP)`. That locks the QSTI QEMU guest to a `1 ms` system tick.
-- **`--no-fsync` (CPU-only SHA-256, 3,000 samples, `1 ms` tick)**:
+- **`ClockPeriod()` Constraint**: Querying `ClockPeriod(CLOCK_REALTIME, ...)` on the QNX 8.0 QSTI QEMU image confirmed `cur = 1,000,000 ns` (`1 ms`), and requesting `500 / 200 / 100 / 50 µs` all returned `rc = -1, errno = 48 (ENOTSUP)`. Identical-config `idle` runs gave `p50 = 450.81` and `1,036.80 µs` (`p50 - min = 33.9–39.9 µs`).
+- **1 ms Tick-Phase Sawtooth Verification (`--phase-offset-us 0/250/500/750`, 1,000 samples each, `actual_clock_period_ns = 1,000,000`)**: `p50` shifted in a `1 ms` sawtooth (`93.08 -> 513.28 -> 825.55 -> 543.43 µs`, `p50 - min = 23.6–36.2 µs`), confirming `idle` latency was quantized to the `1 ms` tick startup phase.
+- **`--no-fsync` (CPU-only SHA-256, 3,000 samples, `1 ms` tick)**: Without `fsync`, `separated-vcpu` missed `16%` (`479/3,000`) vs `39%` for `same-vcpu` (`1,171/3,000`); with `fsync`, `separated-vcpu` missed `30%` (`9,059/30,000`).
 
-| Diagnostic Arm (3,000 samples) | Tick | Misses | `p50` (µs) | `p99` (µs) | Worst `max` (µs) | Takeaway |
+| Diagnostic Arm | Tick | Misses | `p50` (µs) | `p99` (µs) | Worst `max` (µs) | Takeaway |
 |---|---|---:|---:|---:|---:|---|
-| `same-vcpu --no-fsync` | `1 ms` | 1,171 | 2,506.63 | 45,004.02 | 63,436.24 | 39% misses on shared SMT core |
-| `separated-vcpu --no-fsync` | `1 ms` | 479 | **636.58** | 44,306.86 | 56,153.94 | **16%** misses (down from 30% w/ `fsync`) |
+| `same_nofsync` (3k) | `1 ms` | 1,171 | 2,506.63 | 45,004.02 | 63,436.24 | 39% misses on shared SMT core |
+| `sep_nofsync` (3k) | `1 ms` | 479 | 636.58 | 44,306.86 | 56,153.94 | 16% misses (vs 30% w/ `fsync`) |
+| `idle` `--phase-offset-us 0` (1k) | `1 ms` | 1 | 93.08 | 19,240.10 | — | `min=69.47`, `p50-min=23.6 µs` |
+| `idle` `--phase-offset-us 250` (1k) | `1 ms` | 0 | 513.28 | 1,112.05 | — | `min=479.51`, `p50-min=33.8 µs` |
+| `idle` `--phase-offset-us 500` (1k) | `1 ms` | 1 | 825.55 | 44,585.65 | — | `min=789.37`, `p50-min=36.2 µs` |
+| `idle` `--phase-offset-us 750` (1k) | `1 ms` | 1 | 543.43 | 39,138.99 | — | `min=519.52`, `p50-min=23.9 µs` |
 
 ---
 
