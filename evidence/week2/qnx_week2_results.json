@@ -1,0 +1,145 @@
+{
+  "receipts": [
+    {
+      "operation_id": "op-wk2-t01-valid-v11",
+      "decision": "ALLOW",
+      "slot_status": "STAGED_AND_ACTIVATED_SLOT_B",
+      "active_version": 11,
+      "target_version": 11,
+      "journal_seq": 2,
+      "journal_hash": "bc7f87c604d6f95146216111db1f9261ca5425777971ebf8e8f2cb5e81673f38",
+      "payload_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0"
+    },
+    {
+      "operation_id": "op-wk2-t02-tamper-v12",
+      "decision": "DENY_HASH",
+      "slot_status": "UNCHANGED_SLOT_B",
+      "active_version": 11,
+      "target_version": 12,
+      "journal_seq": 3,
+      "journal_hash": "525e8b02d3d25e352ba23c2dd48e4a44f21f463d9acfa72625bfd3ea4e4fdc8f",
+      "payload_sha256": "ef72dc927b681b1c078eb8f7a958e6b6ca76726b034ce3a0328dcd620c63a38f"
+    },
+    {
+      "operation_id": "op-wk2-t03-badsig-v12",
+      "decision": "DENY_SIGNATURE",
+      "slot_status": "UNCHANGED_SLOT_B",
+      "active_version": 11,
+      "target_version": 12,
+      "journal_seq": 4,
+      "journal_hash": "d6d9a2101a28f31a4a1edced7c6085588028070b4555ca07927cc4187d613eb2",
+      "payload_sha256": "c9cb204fad2036e346093d4cb2061d953b2d673b5dad5bfa538745292aabb9f1"
+    },
+    {
+      "operation_id": "op-wk2-t04-rollback-v09",
+      "decision": "DENY_ROLLBACK",
+      "slot_status": "UNCHANGED_SLOT_B",
+      "active_version": 11,
+      "target_version": 9,
+      "journal_seq": 5,
+      "journal_hash": "c249db5f2f39edfe28c58dc29f5d3526247d33f7f4d936deaff98e8952ea1a97",
+      "payload_sha256": "7b65111dbfd18a4fadc46a59cf21a6f0ad15e06546e598be29965cfe2b310a7c"
+    },
+    {
+      "operation_id": "op-wk2-t05-speed-v12",
+      "decision": "DENY_NOT_STATIONARY",
+      "slot_status": "UNCHANGED_SLOT_B",
+      "active_version": 11,
+      "target_version": 12,
+      "journal_seq": 6,
+      "journal_hash": "8f05cb94cddcb14f9726c3cfb046beb6c72be5e686a39515a868b54919b906be",
+      "payload_sha256": "4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"
+    }
+  ],
+  "crash_recoveries": [
+    {
+      "case_id": "T07",
+      "crash_point": "tmp",
+      "operation_id": "op-wk2-t07-crash-v12",
+      "status": {
+        "status_query": true,
+        "active_version": 11,
+        "active_slot": "SLOT_B",
+        "last_sequence_id": 1,
+        "journal_seq": 8,
+        "chain_valid": true,
+        "reconcile_performed": true,
+        "reconciled_op_id": "op-wk2-t07-crash-v12",
+        "reconciled_state": "RECONCILED_ABORTED",
+        "uncertain_locked": false,
+        "last_hash": "34466410be14d020d2856a65a786c2816e9465b382d44692e9e7446680a1d33a"
+      },
+      "active_fw_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0",
+      "expected_fw_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0"
+    },
+    {
+      "case_id": "T07B",
+      "crash_point": "after-rename",
+      "operation_id": "op-wk2-t07b-rename-v12",
+      "status": {
+        "status_query": true,
+        "active_version": 11,
+        "active_slot": "SLOT_B",
+        "last_sequence_id": 1,
+        "journal_seq": 10,
+        "chain_valid": true,
+        "reconcile_performed": true,
+        "reconciled_op_id": "op-wk2-t07b-rename-v12",
+        "reconciled_state": "RECONCILED_ABORTED",
+        "uncertain_locked": false,
+        "last_hash": "6a480fe900113b1bf12f4c02dae65e0a3fdec8ae71e58f0a1f7593ce59726ec0"
+      },
+      "active_fw_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0",
+      "expected_fw_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0"
+    },
+    {
+      "case_id": "T07C",
+      "crash_point": "after-version",
+      "operation_id": "op-wk2-t07c-ver-v12",
+      "status": {
+        "status_query": true,
+        "active_version": 12,
+        "active_slot": "SLOT_A",
+        "last_sequence_id": 8,
+        "journal_seq": 12,
+        "chain_valid": true,
+        "reconcile_performed": true,
+        "reconciled_op_id": "op-wk2-t07c-ver-v12",
+        "reconciled_state": "RECONCILED_ACTIVATED",
+        "uncertain_locked": false,
+        "last_hash": "fb5fc8433ee96f44851f4a480ea062dbe9fb2cbc53e7df35d617572df9dec987"
+      },
+      "active_fw_sha256": "cc96065a9ef05dfe6a2271dd8f9f39bca657c4daf0af2ca87ef29f14bf1103be",
+      "expected_fw_sha256": "cc96065a9ef05dfe6a2271dd8f9f39bca657c4daf0af2ca87ef29f14bf1103be"
+    }
+  ],
+  "post_crash_status": {
+    "status_query": true,
+    "active_version": 12,
+    "active_slot": "SLOT_A",
+    "last_sequence_id": 8,
+    "journal_seq": 12,
+    "chain_valid": true,
+    "reconcile_performed": true,
+    "reconciled_op_id": "op-wk2-t07c-ver-v12",
+    "reconciled_state": "RECONCILED_ACTIVATED",
+    "uncertain_locked": false,
+    "last_hash": "fb5fc8433ee96f44851f4a480ea062dbe9fb2cbc53e7df35d617572df9dec987"
+  },
+  "journal_chain": [
+    "seq=1 prev=0000000000000000000000000000000000000000000000000000000000000000 op=op-wk2-t01-valid-v11 state=BEGIN_STAGE ver=11 slot=SLOT_B hash=28b3e938625f9c609e474a004104ae1743cd16ac4e2f357e796f0e519034c98b",
+    "seq=2 prev=28b3e938625f9c609e474a004104ae1743cd16ac4e2f357e796f0e519034c98b op=op-wk2-t01-valid-v11 state=ACTIVATED ver=11 slot=SLOT_B hash=bc7f87c604d6f95146216111db1f9261ca5425777971ebf8e8f2cb5e81673f38",
+    "seq=3 prev=bc7f87c604d6f95146216111db1f9261ca5425777971ebf8e8f2cb5e81673f38 op=op-wk2-t02-tamper-v12 state=DENY_HASH ver=12 slot=SLOT_B hash=525e8b02d3d25e352ba23c2dd48e4a44f21f463d9acfa72625bfd3ea4e4fdc8f",
+    "seq=4 prev=525e8b02d3d25e352ba23c2dd48e4a44f21f463d9acfa72625bfd3ea4e4fdc8f op=op-wk2-t03-badsig-v12 state=DENY_SIGNATURE ver=12 slot=SLOT_B hash=d6d9a2101a28f31a4a1edced7c6085588028070b4555ca07927cc4187d613eb2",
+    "seq=5 prev=d6d9a2101a28f31a4a1edced7c6085588028070b4555ca07927cc4187d613eb2 op=op-wk2-t04-rollback-v09 state=DENY_ROLLBACK ver=9 slot=SLOT_B hash=c249db5f2f39edfe28c58dc29f5d3526247d33f7f4d936deaff98e8952ea1a97",
+    "seq=6 prev=c249db5f2f39edfe28c58dc29f5d3526247d33f7f4d936deaff98e8952ea1a97 op=op-wk2-t05-speed-v12 state=DENY_NOT_STATIONARY ver=12 slot=SLOT_B hash=8f05cb94cddcb14f9726c3cfb046beb6c72be5e686a39515a868b54919b906be",
+    "seq=7 prev=8f05cb94cddcb14f9726c3cfb046beb6c72be5e686a39515a868b54919b906be op=op-wk2-t07-crash-v12 state=BEGIN_STAGE ver=12 slot=SLOT_A hash=7f5c5421fc35101d094217aa45c266345ee1ef752a889ff24418aedec95267d6",
+    "seq=8 prev=7f5c5421fc35101d094217aa45c266345ee1ef752a889ff24418aedec95267d6 op=op-wk2-t07-crash-v12 state=RECONCILED_ABORTED ver=12 slot=SLOT_B hash=34466410be14d020d2856a65a786c2816e9465b382d44692e9e7446680a1d33a",
+    "seq=9 prev=34466410be14d020d2856a65a786c2816e9465b382d44692e9e7446680a1d33a op=op-wk2-t07b-rename-v12 state=BEGIN_STAGE ver=12 slot=SLOT_A hash=98cb96e98d318a13e98d5200962492d3418f74ac117a87bcd4da0fbc49cd33ff",
+    "seq=10 prev=98cb96e98d318a13e98d5200962492d3418f74ac117a87bcd4da0fbc49cd33ff op=op-wk2-t07b-rename-v12 state=RECONCILED_ABORTED ver=12 slot=SLOT_B hash=6a480fe900113b1bf12f4c02dae65e0a3fdec8ae71e58f0a1f7593ce59726ec0",
+    "seq=11 prev=6a480fe900113b1bf12f4c02dae65e0a3fdec8ae71e58f0a1f7593ce59726ec0 op=op-wk2-t07c-ver-v12 state=BEGIN_STAGE ver=12 slot=SLOT_A hash=9bdd4f8b78ed176d248a675d2b4e8202b7e6c68df7eafb1a9f5d4bd35af5286a",
+    "seq=12 prev=9bdd4f8b78ed176d248a675d2b4e8202b7e6c68df7eafb1a9f5d4bd35af5286a op=op-wk2-t07c-ver-v12 state=RECONCILED_ACTIVATED ver=12 slot=SLOT_A hash=fb5fc8433ee96f44851f4a480ea062dbe9fb2cbc53e7df35d617572df9dec987"
+  ],
+  "independent_hash_chain_verified": true,
+  "serial_transcript_file": "evidence/week2/qnx_serial_transcript.log"
+}

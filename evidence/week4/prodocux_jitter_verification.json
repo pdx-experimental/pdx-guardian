@@ -1,0 +1,251 @@
+{
+  "schema_version": "prodocux_evidence_bundle_result_v1",
+  "request_id": "req-ee720841826ad0a1",
+  "canonical_request_sha256": "3ff8d6cd4387e081396ef9af3f7ec07c9bb9eaa65bb505205e0da697940a15df",
+  "verifier": {
+    "id": "prodocux.evidence_bundle",
+    "version": "1"
+  },
+  "rule_set": {
+    "id": "pdx-guardian-jitter-gate",
+    "version": "3.0.0",
+    "sha256": "a428f61cf42a0fbcd81e1f95f734ac16c4f89677f6a574475647142d33a39ee4"
+  },
+  "status": "fail",
+  "results": [
+    {
+      "check_id": "chk-idle-samples",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-idle-samples"
+      ],
+      "expected": "30000.0..inf",
+      "actual": 30000,
+      "details": {}
+    },
+    {
+      "check_id": "chk-idle-wakeup-overruns",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-idle-overruns"
+      ],
+      "expected": 0.0,
+      "actual": 3,
+      "details": {}
+    },
+    {
+      "check_id": "chk-idle-ecu-misses",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-idle-ecu-misses"
+      ],
+      "expected": 0.0,
+      "actual": 3,
+      "details": {}
+    },
+    {
+      "check_id": "chk-idle-p50-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-idle-p50"
+      ],
+      "expected": 50.0,
+      "actual": 789.71,
+      "details": {}
+    },
+    {
+      "check_id": "chk-idle-p99-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-idle-p99"
+      ],
+      "expected": 250.0,
+      "actual": 1350.606,
+      "details": {}
+    },
+    {
+      "check_id": "chk-idle-max-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-idle-max"
+      ],
+      "expected": 1500.0,
+      "actual": 18695.996,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-samples",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-samples"
+      ],
+      "expected": "30000.0..inf",
+      "actual": 30000,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-wakeup-overruns",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-overruns"
+      ],
+      "expected": 0.0,
+      "actual": 17,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-ecu-misses",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-ecu-misses"
+      ],
+      "expected": 0.0,
+      "actual": 17,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-p50-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-p50"
+      ],
+      "expected": 50.0,
+      "actual": 607.16,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-p99-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-p99"
+      ],
+      "expected": 250.0,
+      "actual": 1489.912,
+      "details": {}
+    },
+    {
+      "check_id": "chk-same-vcpu-max-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-same-vcpu-max"
+      ],
+      "expected": 1500.0,
+      "actual": 127841.204,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-samples",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-samples"
+      ],
+      "expected": "30000.0..inf",
+      "actual": 30000,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-wakeup-overruns",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-overruns"
+      ],
+      "expected": 0.0,
+      "actual": 2,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-ecu-misses",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-ecu-misses"
+      ],
+      "expected": 0.0,
+      "actual": 2,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-p50-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-p50"
+      ],
+      "expected": 50.0,
+      "actual": 1263.63,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-p99-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-p99"
+      ],
+      "expected": 250.0,
+      "actual": 1943.176,
+      "details": {}
+    },
+    {
+      "check_id": "chk-separated-vcpu-max-threshold",
+      "status": "fail",
+      "reason_codes": [
+        "VALUE_ABOVE_MAXIMUM"
+      ],
+      "evidence_ids": [
+        "ev-separated-vcpu-max"
+      ],
+      "expected": 1500.0,
+      "actual": 11208.444,
+      "details": {}
+    }
+  ]
+}

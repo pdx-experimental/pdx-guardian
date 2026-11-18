@@ -1,0 +1,74 @@
+{
+  "client_os": "QNX",
+  "client_release": "8.0.0",
+  "health_http": 200,
+  "target_health": {
+    "status": "ok",
+    "sysname": "Linux",
+    "machine": "x86_64",
+    "pid": 14455,
+    "active_version": 10,
+    "active_slot": "SLOT_A",
+    "write_count": 0
+  },
+  "case_a": {
+    "drop_http": 0,
+    "status_http": 200,
+    "status": {
+      "active_version": 11,
+      "active_slot": "SLOT_B",
+      "last_sequence_id": 1,
+      "write_count": 1,
+      "committed": true,
+      "receipt": {
+        "operation_id": "op-wk3-t01-valid-v11",
+        "decision": "ALLOW",
+        "slot_status": "STAGED_AND_ACTIVATED_SLOT_B",
+        "active_slot": "SLOT_B",
+        "active_version": 11,
+        "target_version": 11,
+        "payload_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0",
+        "bundle_sha256": "30fe89d8872044df992619fa56bc1373dbcc80ecb573ebb41c0321e5028f75ef",
+        "write_count_at_commit": 1,
+        "write_count": 1,
+        "committed": true
+      }
+    },
+    "replay_http": 200,
+    "replay": {
+      "operation_id": "op-wk3-t01-valid-v11",
+      "decision": "ALLOW",
+      "slot_status": "STAGED_AND_ACTIVATED_SLOT_B",
+      "active_slot": "SLOT_B",
+      "active_version": 11,
+      "target_version": 11,
+      "payload_sha256": "7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0",
+      "bundle_sha256": "30fe89d8872044df992619fa56bc1373dbcc80ecb573ebb41c0321e5028f75ef",
+      "write_count_at_commit": 1,
+      "write_count": 1,
+      "committed": true,
+      "idempotent_replay": true
+    },
+    "convergence_ms": 792.13
+  },
+  "case_b": {
+    "drop_http": 0,
+    "status_http": 200,
+    "status": {
+      "active_version": 11,
+      "active_slot": "SLOT_B",
+      "last_sequence_id": 1,
+      "write_count": 1,
+      "committed": false,
+      "receipt": null
+    },
+    "convergence_ms": 677.9
+  },
+  "case_d": {
+    "http_status": 409,
+    "body": {
+      "error": "operation_id_payload_mismatch",
+      "operation_id": "op-wk3-t01-valid-v11"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "prodocux.oci_dual_vm.verification.v2",
+  "status": "pass",
+  "passed": 4,
+  "total": 4,
+  "checks": [
+    {
+      "name": "case_a_drop_after_commit_reconciled",
+      "passed": true
+    },
+    {
+      "name": "case_b_drop_before_commit_no_write",
+      "passed": true
+    },
+    {
+      "name": "case_c_vm2_restart_preserves_state_and_idempotent",
+      "passed": true
+    },
+    {
+      "name": "case_d_conflicting_payload_rejected_409",
+      "passed": true
+    }
+  ]
+}

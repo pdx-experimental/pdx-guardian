@@ -1,0 +1,58 @@
+{
+  "environment": "Dual OCI VMs (VM1 198.51.100.1 <-> VM2 198.51.100.2, Ubuntu 24.04)",
+  "target_health": {
+    "status": "ok",
+    "sysname": "Linux",
+    "machine": "x86_64",
+    "pid": 14305,
+    "active_version": 10,
+    "active_slot": "SLOT_A",
+    "write_count": 0
+  },
+  "cases": [
+    {
+      "case": "A_drop_after_commit",
+      "operation_id": "op-wk3-t01-valid-v11",
+      "transport_error": "RemoteDisconnected: Remote end closed connection without response",
+      "reconciled_committed": true,
+      "active_version": 11,
+      "active_slot": "SLOT_B",
+      "write_count_after_reconcile": 1,
+      "idempotent_replay_http": 200,
+      "idempotent_replay_flag": true,
+      "write_count_after_replay": 1,
+      "convergence_ms": 1022.48
+    },
+    {
+      "case": "B_drop_before_commit",
+      "operation_id": "op-wk3-t07-crash-v12",
+      "transport_error": "RemoteDisconnected: Remote end closed connection without response",
+      "reconciled_committed": false,
+      "active_version": 11,
+      "active_slot": "SLOT_B",
+      "write_count": 1,
+      "convergence_ms": 491.75
+    },
+    {
+      "case": "C_restart_and_replay",
+      "health_after_restart": {
+        "status": "ok",
+        "sysname": "Linux",
+        "machine": "x86_64",
+        "pid": 14369,
+        "active_version": 11,
+        "active_slot": "SLOT_B",
+        "write_count": 1
+      },
+      "replay_http": 200,
+      "idempotent_replay_flag": true,
+      "write_count_after_restart_replay": 1
+    },
+    {
+      "case": "D_conflicting_payload_rejected",
+      "http_status": 409,
+      "error": "operation_id_payload_mismatch",
+      "write_count_unchanged": 1
+    }
+  ]
+}

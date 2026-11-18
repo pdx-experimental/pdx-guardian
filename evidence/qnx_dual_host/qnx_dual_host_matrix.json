@@ -1,0 +1,32 @@
+{
+  "schema": "prodocux.qnx_dual_host.matrix.v1",
+  "status": "pass",
+  "passed": 6,
+  "total": 6,
+  "checks": [
+    {
+      "name": "target_os_is_qnx",
+      "passed": true
+    },
+    {
+      "name": "case_a_drop_after_commit_reconciled",
+      "passed": true
+    },
+    {
+      "name": "case_b_drop_before_commit_no_write",
+      "passed": true
+    },
+    {
+      "name": "case_c_qnx_restart_preserves_state_and_idempotent",
+      "passed": true
+    },
+    {
+      "name": "case_d_conflicting_payload_same_op_id_rejected_409",
+      "passed": true
+    },
+    {
+      "name": "case_e_state_save_failure_500_restart_and_fw_hash_intact",
+      "passed": true
+    }
+  ]
+}

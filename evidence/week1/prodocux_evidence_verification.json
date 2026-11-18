@@ -1,0 +1,146 @@
+{
+  "schema_version": "prodocux_evidence_bundle_result_v1",
+  "request_id": "req-b7c862aefb9e2f16",
+  "canonical_request_sha256": "eb83b9ec447d729305cf09178fa319c8f8c58ffe2f4ef643a75b9bdbeca2458c",
+  "verifier": {
+    "id": "prodocux.evidence_bundle",
+    "version": "1"
+  },
+  "rule_set": {
+    "id": "pdx-guardian-ota-gate",
+    "version": "1.0.0",
+    "sha256": "8c50bd84a7e3cc9521ea801bcd26503f0c190c7138b3c22160af4f42e78ded18"
+  },
+  "status": "pass",
+  "results": [
+    {
+      "check_id": "chk-1-presence",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_PRESENT"
+      ],
+      "evidence_ids": [
+        "ev-1-op",
+        "ev-1-decision",
+        "ev-1-pdx-status"
+      ],
+      "actual": "op-week1-thin-thread-0001",
+      "details": {}
+    },
+    {
+      "check_id": "chk-1-version-floor",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-1-active-ver"
+      ],
+      "expected": "10.0..inf",
+      "actual": 11,
+      "details": {}
+    },
+    {
+      "check_id": "chk-1-qnx-decision-match",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-1-decision"
+      ],
+      "expected": "ALLOW",
+      "actual": "ALLOW",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-1-pdx-status-match",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-1-pdx-status"
+      ],
+      "expected": "completed",
+      "actual": "completed",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-1-artifact-uri-match",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-1-artifact-uri"
+      ],
+      "expected": "artifact://qnx-guardian/slots/slot_b/firmware.bin",
+      "actual": "artifact://qnx-guardian/slots/slot_b/firmware.bin",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-2-presence",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_PRESENT"
+      ],
+      "evidence_ids": [
+        "ev-2-op",
+        "ev-2-decision",
+        "ev-2-pdx-status"
+      ],
+      "actual": "op-week1-tamper-test-0002",
+      "details": {}
+    },
+    {
+      "check_id": "chk-2-version-floor",
+      "status": "pass",
+      "reason_codes": [
+        "VALUE_WITHIN_RANGE"
+      ],
+      "evidence_ids": [
+        "ev-2-active-ver"
+      ],
+      "expected": "10.0..inf",
+      "actual": 11,
+      "details": {}
+    },
+    {
+      "check_id": "chk-2-qnx-decision-match",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-2-decision"
+      ],
+      "expected": "DENY_HASH",
+      "actual": "DENY_HASH",
+      "details": {
+        "compared_count": 1
+      }
+    },
+    {
+      "check_id": "chk-2-pdx-status-match",
+      "status": "pass",
+      "reason_codes": [
+        "VALUES_EQUAL"
+      ],
+      "evidence_ids": [
+        "ev-2-pdx-status"
+      ],
+      "expected": "failed",
+      "actual": "failed",
+      "details": {
+        "compared_count": 1
+      }
+    }
+  ]
+}

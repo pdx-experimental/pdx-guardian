@@ -50,7 +50,8 @@ dist/
 # Logs & Test outputs
 *.log
 runtime_metrics.csv
-evidence/
+evidence/**/*.pdf
+evidence/**/*.csv
 reports/
 
 # OS and Editor files
