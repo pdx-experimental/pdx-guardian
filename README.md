@@ -1,7 +1,7 @@
 # PDX Guardian
-## QNX-Native Update Gate & Crash-Safe Evidence Plane
+## QNX 8.0 Crash-Safe OTA Gate & In-Motion Safety
 
-*Verify before activation. Reconcile after interruption. Preserve the evidence.*
+*Verify before activation. Fall back deterministically under partition. Preserve the evidence.*
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![CI](https://github.com/pdx-experimental/pdx-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/pdx-experimental/pdx-guardian/actions/workflows/ci.yml)
@@ -12,12 +12,10 @@
 
 ### Overview
 
-**PDX Guardian** is a QNX Neutrino 8.0 native Resource Manager (`/dev/pdxguardian`) that sits in front of vehicle firmware activation—enforcing cryptographic verification, anti-rollback, and stationary-vehicle policy **before** any slot is touched, logging transitions to an `fsync`-checked SHA-256 hash-chained journal on `fs-qnx6`, and recovering deterministically after `SIGKILL` or persistence failures.
-
-Instead of embedding heavy Python orchestrators inside the vehicle RTOS, PDX Guardian separates:
-1. **QNX 8.0 Native Update Gate (`qnx/guardian-gate/guardian_gate.c`, `/dev/pdxguardian`)**: Performs Ed25519 signature verification, SHA-256 integrity checks, anti-rollback, hardware-revision matching (`DENY_HW_REV`), vehicle-speed gating (`DENY_NOT_STATIONARY`), fail-closed journal recovery, and `SCHED_FIFO` / `SCHED_RR` priority isolation.
-2. **Host Lifecycle & Audit Plane (`host/`, `pdx-artifact-engine`, `prodocux`)**: Drives external lifecycles, idempotent cross-host reconciliation (host-side HTTP `409 Conflict` on conflicting operation IDs), and tamper-evident `prodocux.evidence_bundle` receipts.
-3. **In-Motion Cooperative Driving-Plan Exchange & Fleet Validation (`tests/dsx_air_fleet/qnx_veh_host.c`)**: While vehicles are actively driving through intersections (`j1 / j2 / j3`), `qnx_veh_host.c` exchanges `DrivingIntentV2` plans every 100 ms, rejects 100% of stale packets, and triggers local stopping-distance fallback + 2-stage recovery during network partitions (60–600 vehicles in SUMO 1.28+ simulation)—distinct from `/dev/pdxguardian`'s stationary (`0 km/h`) firmware-slot activation gate.
+**PDX Guardian** brings fail-closed QNX Neutrino 8.0 safety engineering to two complementary vehicle operational states—keeping heavy Python orchestration off the vehicle RTOS while preserving tamper-evident evidence:
+1. **Parked (`0 km/h`) — QNX 8.0 Native OTA Update Gate (`qnx/guardian-gate/guardian_gate.c`, `/dev/pdxguardian`)**: Enforces Ed25519 signature verification, SHA-256 integrity checks, anti-rollback, hardware-revision matching (`DENY_HW_REV`), stationary-vehicle gating (`DENY_NOT_STATIONARY`), `fsync`-checked `fs-qnx6` journal recovery after `SIGKILL`, and `SCHED_FIFO` / `SCHED_RR` priority isolation.
+2. **In Motion — Cooperative Driving-Plan Exchange (`tests/dsx_air_fleet/qnx_veh_host.c`)**: While vehicles actively drive through intersections (`j1 / j2 / j3`), `qnx_veh_host.c` exchanges `DrivingIntentV2` plans every 100 ms, rejects 100% of stale packets, and executes local stopping-distance fallback + 2-stage recovery during network partitions (60–600 vehicles in SUMO 1.28+ simulation).
+3. **Host Lifecycle & Audit Plane (`host/`, `pdx-artifact-engine`, `prodocux`)**: Drives external lifecycles, idempotent cross-host reconciliation (host-side HTTP `409 Conflict` on conflicting operation IDs), and tamper-evident `prodocux.evidence_bundle` receipts.
 
 ---
 
