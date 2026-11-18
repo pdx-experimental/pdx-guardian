@@ -1,0 +1,44 @@
+name: Portable C & Host Verification CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  portable-c-and-host-tests:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install C compiler & OpenSSL dev headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libssl-dev
+
+      - name: Compile portable manifest, policy, and OpenSSL verifier
+        run: |
+          gcc -Wall -Wextra -Werror -O2 -Iportable/include \
+            -c portable/manifest/pdx_manifest.c -o /tmp/pdx_manifest.o
+          gcc -Wall -Wextra -Werror -O2 -Iportable/include \
+            -c portable/verifier/pdx_crypto_openssl.c -o /tmp/pdx_crypto_openssl.o
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Syntax-check host & fleet Python scripts
+        run: |
+          python -m compileall -q host scripts tests
+
+      - name: Install pinned host orchestrator packages
+        run: |
+          pip install pdx-artifact-engine==0.3.0a12 prodocux==0.3.0rc11
+
+      - name: Run host rejection & A/B slot unit tests
+        run: |
+          python host/tests/test_week2_host_rejections.py

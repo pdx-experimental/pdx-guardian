@@ -11,7 +11,8 @@
 param (
     [string]$SourceDir = "",
     [string]$TargetDir = "",
-    [switch]$Execute
+    [switch]$Execute,
+    [switch]$AllowExistingGit
 )
 
 if (-not $SourceDir) {
@@ -55,7 +56,7 @@ Assert-NoReparseEscape -RootPath $SourceDir -CandidatePath $SourceDir
 if (Test-Path $TargetDir) {
     Assert-NoReparseEscape -RootPath $TargetDir -CandidatePath $TargetDir
 }
-if (Test-Path (Join-Path $TargetDir ".git")) {
+if (-not $AllowExistingGit -and (Test-Path (Join-Path $TargetDir ".git"))) {
     Write-Error "SECURITY VIOLATION: Target directory $TargetDir has a .git directory before Stage 5 sign-off!"
     exit 1
 }
@@ -66,6 +67,7 @@ $prohibitedExtensions = @(".run", ".exe", ".iso", ".img", ".qcow2", ".pem", ".ke
 $approvedRelativePaths = @(
     ".dockerignore",
     ".gitignore",
+    ".github\workflows\ci.yml",
     "LICENSE",
     "README.md",
     "portable\include\pdx_gate_policy.h",
@@ -145,8 +147,10 @@ $approvedRelativePaths = @(
     "scripts\run_week4_e2e.py",
     "docker\Dockerfile.qnx-builder",
     "docs\ARCHITECTURE.md",
+    "docs\CODELAB.md",
     "docs\DEPLOYMENT.md",
     "docs\ENGINE_BOUNDARY.md",
+    "docs\QNX_EVIDENCE.md",
     "docs\SECURITY.md",
     "docs\hackathon_dashboard.html",
     "tests\qnx_dual_host\qnx_target_service.c",
