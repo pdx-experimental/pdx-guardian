@@ -24,6 +24,7 @@ typedef struct {
     int affinity_ok;
     int sched_ok;
     const char *work_dir;
+    int no_fsync;
     volatile int *stop_flag;
     uint64_t sha256_iterations;
     uint64_t io_write_ok;
@@ -75,11 +76,14 @@ static void *update_worker_thread(void *arg) {
                       ? 1
                       : 0;
 
-    char io_path[512];
-    snprintf(io_path, sizeof(io_path), "%s/jitter_worker_io.bin", w->work_dir);
-    int fd = open(io_path, O_CREAT | O_RDWR | O_TRUNC, 0600);
-    if (fd < 0) {
-        w->io_errors++;
+    int fd = -1;
+    if (!w->no_fsync) {
+        char io_path[512];
+        snprintf(io_path, sizeof(io_path), "%s/jitter_worker_io.bin", w->work_dir);
+        fd = open(io_path, O_CREAT | O_RDWR | O_TRUNC, 0600);
+        if (fd < 0) {
+            w->io_errors++;
+        }
     }
 
     uint8_t buf[65536];
@@ -160,6 +164,8 @@ int main(int argc, char **argv) {
     const char *work_dir = "/data/var/tmp/jitter_work";
     const char *out_json = "/data/var/tmp/jitter_result.json";
     const char *samples_csv = NULL;
+    int no_fsync = 0;
+    long clock_period_ns = 0;
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--scenario") == 0 && i + 1 < argc) {
@@ -178,6 +184,10 @@ int main(int argc, char **argv) {
             out_json = argv[++i];
         } else if (strcmp(argv[i], "--samples-csv") == 0 && i + 1 < argc) {
             samples_csv = argv[++i];
+        } else if (strcmp(argv[i], "--no-fsync") == 0) {
+            no_fsync = 1;
+        } else if (strcmp(argv[i], "--clock-period-ns") == 0 && i + 1 < argc) {
+            clock_period_ns = atol(argv[++i]);
         }
     }
 
@@ -194,6 +204,15 @@ int main(int argc, char **argv) {
     }
 
     mkdir(work_dir, 0755);
+
+    struct _clockperiod old_cp = {0, 0};
+    int clock_period_changed = 0;
+    if (clock_period_ns > 0) {
+        struct _clockperiod new_cp = {(unsigned long)clock_period_ns, 0};
+        if (ClockPeriod(CLOCK_REALTIME, &new_cp, &old_cp, 0) == 0) {
+            clock_period_changed = 1;
+        }
+    }
 
     int ecu_cpu = 0;
     int worker_cpu = (strcmp(scenario, "separated-vcpu") == 0) ? 1 : 0;
@@ -214,6 +233,7 @@ int main(int argc, char **argv) {
     wargs.requested_policy = SCHED_RR;
     wargs.requested_priority = 10;
     wargs.work_dir = work_dir;
+    wargs.no_fsync = no_fsync;
     wargs.stop_flag = &stop_flag;
 
     pthread_t worker_tid;
@@ -334,7 +354,7 @@ int main(int argc, char **argv) {
         max_signed_us = 0.0;
     }
 
-    int worker_io_ok = (!worker_enabled) || (wargs.io_errors == 0 && wargs.io_write_ok > 0 && wargs.io_fsync_ok > 0);
+    int worker_io_ok = (!worker_enabled) || (no_fsync ? (wargs.io_errors == 0 && wargs.sha256_iterations > 0) : (wargs.io_errors == 0 && wargs.io_write_ok > 0 && wargs.io_fsync_ok > 0));
     int config_valid = (ecu_affinity_ok && ecu_sched_ok &&
                         wargs.affinity_ok && wargs.sched_ok &&
                         worker_io_ok && !sleep_error &&
@@ -415,6 +435,9 @@ int main(int argc, char **argv) {
     }
     printf("JITTER_RESULT_BEGIN\n%sJITTER_RESULT_END\n", json_buf);
 
+    if (clock_period_changed) {
+        ClockPeriod(CLOCK_REALTIME, &old_cp, NULL, 0);
+    }
     free(signed_lat_us);
     free(abs_lat_us);
     free(work_span_us_arr);

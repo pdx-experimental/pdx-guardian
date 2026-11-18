@@ -15,6 +15,7 @@ This document maps every QNX-specific capability used in **PDX Guardian** direct
 | **Absolute Monotonic Timers** | `qnx/ecu-simulator/jitter_bench.c`<br>`clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, ...)` for `10 ms` loop | Run `scripts/run_week4_e2e.py` (3 scenarios x 3 rounds x 10,000 samples) | `evidence/week4/qnx_week4_jitter.json` |
 | **Crash-Safe Hash-Chained Journal on `fs-qnx6`** | `qnx/journal/pdx_journal.c`, `pdx_journal.h`<br>`fsync`-checked append, SHA-256 chain verification, monotonic version anchor | `T07` (`tmp`), `T07B` (`after-rename`), `T07C` (`after-version`) `SIGKILL` tests + `T09` persist error | `evidence/week3/qnx_week3_results.json` |
 | **Ed25519 + SHA-256 Verification** | `portable/verifier/pdx_crypto_openssl.c`<br>OpenSSL 3 `EVP_DigestVerify` (Ed25519) & `EVP_Digest` (SHA-256) | `T01` (valid), `T02` (`DENY_HASH`), `T03` (`DENY_SIGNATURE`), `T06` (`DENY_HW_REV`) | `evidence/week3/qnx_week3_results.json` |
+| **QNX 8.0 Target Service (Dual-Host)** | `tests/qnx_dual_host/qnx_target_service.c`<br>Cross-host OTA target service inside QNX 8.0 | `python tests/qnx_dual_host/run_qnx_dual_host.py` | `evidence/qnx_dual_host/qnx_dual_host_results.json` |
 | **QNX 8.0 Cooperative Fleet Node** | `tests/dsx_air_fleet/qnx_veh_host.c`<br>Cross-compiled with `qcc -Vgcc_ntox86_64 -O2 -lsocket -lm` | `uname -a` -> `QNX localhost 8.0.0 ... x86_64` + `run_qnx_3guest.py --binary` | `tests/dsx_air_fleet/out_qnx_3guest_bin/qnx_3guest_results.json` |
 
 ---
@@ -35,7 +36,16 @@ Under **nested `/dev/kvm` on a 1-OCPU (2-SMT-thread) cloud VM** (`evidence/week4
 |---|---:|---:|---:|---:|---|
 | `idle` (nested KVM baseline) | 12 | 874.67 | 1,035.89 | 21,701.99 | **FAIL** (nested cloud KVM) |
 | `same-vcpu` (CPU0 FIFO 50 vs CPU0 RR 10) | 13,194 | 2,546.67 | 63,508.78 | 79,553.18 | **FAIL** (1-OCPU + `fsync` I/O) |
-| `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | 9,059 | 594.72 | 61,370.46 | 78,650.54 | **FAIL** (**4.3x** lower `p50` vs `same-vcpu`) |
+| `separated-vcpu` (CPU0 FIFO 50 vs CPU1 RR 10) | 9,059 | 594.72 | 61,370.46 | 78,650.54 | **FAIL** (4.3x lower `p50`; tail unimproved) |
+
+Follow-up diagnostic on nested `/dev/kvm` (`evidence/week4/qnx_week4_jitter_kvm_diag.json`, 3,000 samples each) isolating `ClockPeriod(100 µs)` vs default `1 ms` tick and `--no-fsync` (CPU-only SHA-256):
+
+| Diagnostic Arm (3,000 samples) | Misses | `p50` (µs) | `p99` (µs) | Worst `max` (µs) | Takeaway |
+|---|---:|---:|---:|---:|---|
+| `idle` (default 1 ms tick) | 1 | 1,036.80 | 1,166.89 | 18,934.63 | Quantized to QNX 1 ms tick |
+| `idle --clock-period-ns 100000` (100 µs tick) | 1 | **450.81** | **598.41** | 12,788.96 | **2.3x** lower `p50` (hypervisor floor remains) |
+| `same-vcpu --no-fsync` (100 µs tick) | 1,171 | 2,506.63 | 45,004.02 | 63,436.24 | 39% misses on shared SMT core |
+| `separated-vcpu --no-fsync` (100 µs tick) | 479 | **636.58** | 44,306.86 | 56,153.94 | **16%** misses (down from 30% w/ `fsync`) |
 
 ---
 
