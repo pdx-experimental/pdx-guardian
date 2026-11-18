@@ -17,7 +17,7 @@
 Instead of embedding heavy Python orchestrators inside the vehicle RTOS, PDX Guardian separates:
 1. **QNX 8.0 Native Update Gate (`qnx/guardian-gate/guardian_gate.c`, `/dev/pdxguardian`)**: Performs Ed25519 signature verification, SHA-256 integrity checks, anti-rollback, hardware-revision matching (`DENY_HW_REV`), vehicle-speed gating (`DENY_NOT_STATIONARY`), fail-closed journal recovery, and `SCHED_FIFO` / `SCHED_RR` priority isolation.
 2. **Host Lifecycle & Audit Plane (`host/`, `pdx-artifact-engine`, `prodocux`)**: Drives external lifecycles, idempotent cross-host reconciliation (host-side HTTP `409 Conflict` on conflicting operation IDs), and tamper-evident `prodocux.evidence_bundle` receipts.
-3. **Scale-Out Fleet Validation (`tests/dsx_air_fleet/qnx_veh_host.c`)**: Applies the same fail-closed philosophy across 60–600 cooperative vehicles in SUMO 1.28+ simulation.
+3. **In-Motion Cooperative Driving-Plan Exchange & Fleet Validation (`tests/dsx_air_fleet/qnx_veh_host.c`)**: While vehicles are actively driving through intersections (`j1 / j2 / j3`), `qnx_veh_host.c` exchanges `DrivingIntentV2` plans every 100 ms, rejects 100% of stale packets, and triggers local stopping-distance fallback + 2-stage recovery during network partitions (60–600 vehicles in SUMO 1.28+ simulation)—distinct from `/dev/pdxguardian`'s stationary (`0 km/h`) firmware-slot activation gate.
 
 ---
 
@@ -60,7 +60,7 @@ All 10 fault-injection and recovery cases in `evidence/week3/qnx_week3_results.j
 
 ### Fleet-Scale Validation (60 → 600 Vehicles, Simulation)
 
-To evaluate QNX 8.0 behavior at fleet scale (`tests/dsx_air_fleet/qnx_veh_host.c`, SUMO 1.28+ simulation):
+To evaluate QNX 8.0 behavior during **in-motion cooperative driving-plan exchange** (`DrivingIntentV2` across `j1 / j2 / j3` intersections at fleet scale, `tests/dsx_air_fleet/qnx_veh_host.c`, SUMO 1.28+ simulation):
 - **Safety Invariants in Simulation**: Across Single-Guest QNX TCG, 3-Independent-QNX-Guest, Cross-Host `1000 km` WAN, and OCI Intra-Region KVM (`0.22 ms` LAN), every QNX run recorded **0 collisions**, **0 unsafe commands**, **100% stale-packet rejection** (`20–200` dropped), and **100% 2-stage recovery** (`8/8` to `17/17` vehicles).
 - **Dedicated QNX Node vs. Shared-Host Contention** (`out_oci_lan/qnx_oci_lan_results.json`, `60 → 600` vehicles):
   - `qnx-zone-c` (dedicated QNX KVM VM, `-smp 2 -m 512M`): `p99 = 1.83 → 4.55 → 6.94 → 8.79 ms`
