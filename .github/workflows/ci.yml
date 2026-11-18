@@ -19,12 +19,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcc libssl-dev
 
-      - name: Compile portable manifest, policy, and OpenSSL verifier
+      - name: Compile & run portable C fixture tests (shared with QNX)
         run: |
           gcc -Wall -Wextra -Werror -O2 -Iportable/include \
-            -c portable/manifest/pdx_manifest.c -o /tmp/pdx_manifest.o
-          gcc -Wall -Wextra -Werror -O2 -Iportable/include \
-            -c portable/verifier/pdx_crypto_openssl.c -o /tmp/pdx_crypto_openssl.o
+            portable/manifest/pdx_manifest.c \
+            portable/verifier/pdx_crypto_openssl.c \
+            portable/tests/test_portable_fixtures.c \
+            -lcrypto -o /tmp/test_portable_fixtures
+          /tmp/test_portable_fixtures
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5

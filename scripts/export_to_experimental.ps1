@@ -74,6 +74,7 @@ $approvedRelativePaths = @(
     "portable\include\pdx_manifest.h",
     "portable\manifest\pdx_manifest.c",
     "portable\verifier\pdx_crypto_openssl.c",
+    "portable\tests\test_portable_fixtures.c",
     "qnx\guardian-gate\gate_submit.c",
     "qnx\guardian-gate\guardian_gate.c",
     "qnx\journal\pdx_journal.c",

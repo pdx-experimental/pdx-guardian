@@ -11,7 +11,7 @@
 The system strictly enforces the authority boundary between the **Host Orchestrator (Python)** and the **Vehicle Target (QNX C/C++ Native)**:
 
 ```text
-[Host Orchestrator: Ubuntu / Python 3.11+]
+[Host Orchestrator: Ubuntu / Python 3.10+ (container) or 3.12 (CI & Host)]
   ├── pdx-artifact-engine (0.3.0a12): External Operation Lifecycle, Step Receipts, Checkpoint CAS
   ├── ProDocuX (0.3.0rc11): Deterministic Render, Evidence Verification, PDF Report
   └── Fleet Controller: Binary Signed Manifest Dispatch (160 Bytes)
@@ -48,10 +48,11 @@ The system strictly enforces the authority boundary between the **Host Orchestra
    * Simulates a periodic vehicle real-time control service (e.g., steering/braking monitor).
    * Runs a fixed 10 ms period timed via `clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, ...)`.
    * Supports both `same-vcpu` and `separated-vcpu` scheduling configurations, recording cycle jitter and deadline miss counts.
-4. **`qnx/update-worker/` (Update Staging & Crash Recovery)**:
-   * Writes update payloads to the inactive simulated slot (`SLOT_A` / `SLOT_B` alternating).
-   * Appends monotonic SHA-256 hash-chained journal records (`seq`, `prev_hash`, `op_id`, `state`, `ver`, `slot`, `entry_hash`).
-   * If interrupted (`SIGKILL` or persistence I/O error), automatically reconciles on restart from the durable journal and atomic version anchor (`state_version.dat`).
+4. **`qnx/journal/` & `qnx/ecu-simulator/jitter_bench.c` (Journal, Simulated Slot Staging & Worker Load)**:
+   * Writes update payloads to the inactive simulated slot (`SLOT_A` / `SLOT_B` alternating) inside `qnx/guardian-gate/guardian_gate.c`.
+   * Appends monotonic SHA-256 hash-chained journal records (`qnx/journal/pdx_journal.c`).
+   * If interrupted (`SIGKILL` or persistence I/O error), automatically reconciles on restart from the durable journal.
+   * `jitter_bench.c` runs the representative `SCHED_RR` priority-10 worker load (SHA-256 + `fsync` I/O) against the `SCHED_FIFO` priority-50 `10 ms` ECU loop.
 
 ---
 

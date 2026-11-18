@@ -21,7 +21,22 @@ pip install pdx-artifact-engine==0.3.0a12 prodocux==0.3.0rc11
 ```
 
 #### Step B: Cross-Compile QNX 8.0 Native Binaries
-Run from a Windows shell with QNX SDP 8.0 installed (replace `<QNX_SDP_ROOT>` with your QNX SDP 8.0 directory):
+Obtain QNX SDP 8.0 and the QSTI QEMU image (`disk-qemu.qcow2`) via **QNX Everywhere** at [qnx.com](https://blackberry.qnx.com/).
+
+**On Linux (or inside the builder container with `<QNX_SDP_ROOT>` mounted at `/opt/qnx800`):**
+```bash
+source <QNX_SDP_ROOT>/qnxsdp-env.sh
+qcc -Vgcc_ntox86_64 -Wall -Wextra -O2 -Iportable/include -Iqnx/journal \
+  -o qnx/guardian-gate/guardian_gate.elf \
+  qnx/guardian-gate/guardian_gate.c qnx/journal/pdx_journal.c \
+  portable/manifest/pdx_manifest.c portable/verifier/pdx_crypto_openssl.c -lcrypto
+qcc -Vgcc_ntox86_64 -Wall -Wextra -O2 -Iportable/include \
+  -o qnx/guardian-gate/gate_submit.elf qnx/guardian-gate/gate_submit.c
+qcc -Vgcc_ntox86_64 -Wall -Wextra -O2 \
+  -o qnx/ecu-simulator/jitter_bench.elf qnx/ecu-simulator/jitter_bench.c -lcrypto -lm
+```
+
+**On Windows (`cmd`):**
 ```cmd
 call <QNX_SDP_ROOT>\qnxsdp-env.bat
 qcc -Vgcc_ntox86_64 -Wall -Wextra -O2 -Iportable\include -Iqnx\journal ^
@@ -87,7 +102,12 @@ python tests\dsx_air_fleet\run_sumo_baseline.py
 ```
 
 #### Step E2: Cross-Compile `qnx_veh_host.elf` & Configure Target Paths
-With QNX SDP 8.0 installed at `<QNX_SDP_ROOT>`:
+**On Linux:**
+```bash
+source <QNX_SDP_ROOT>/qnxsdp-env.sh
+qcc -Vgcc_ntox86_64 -O2 -Wall -Wextra -o tests/dsx_air_fleet/qnx_veh_host.elf tests/dsx_air_fleet/qnx_veh_host.c -lsocket -lm
+```
+**On Windows (`cmd`):**
 ```cmd
 call <QNX_SDP_ROOT>\qnxsdp-env.bat
 qcc -Vgcc_ntox86_64 -O2 -Wall -Wextra -o tests\dsx_air_fleet\qnx_veh_host.elf tests\dsx_air_fleet\qnx_veh_host.c -lsocket -lm
