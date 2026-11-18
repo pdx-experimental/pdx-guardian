@@ -212,6 +212,7 @@ $approvedRelativePaths = @(
     "tests\dsx_air_fleet\out_sumo_baseline\sumo_baseline_results.json",
     "tests\dsx_air_fleet\out_qnx_vs_ubuntu\qnx_vs_ubuntu_results.json",
     "tests\dsx_air_fleet\out_qnx_vs_ubuntu\qnx_vs_ubuntu_kvm_results.json",
+    "tests\dsx_air_fleet\out_qnx_vs_ubuntu\qnx_vs_ubuntu_kvm_binary_results.json",
     "tests\dsx_air_fleet\out_60v_paced\dsx_60v_multiseed_results.json",
     "tests\dsx_air_fleet\out_60v_paced\prodocux_dsx_60v_bundle_verification.json"
 )

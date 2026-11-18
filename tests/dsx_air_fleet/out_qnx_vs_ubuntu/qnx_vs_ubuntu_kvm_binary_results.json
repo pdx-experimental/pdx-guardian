@@ -1,0 +1,124 @@
+{
+  "comparison_type": "Fair KVM-vs-KVM Binary Protocol A/B (-enable-kvm -cpu host -smp 2 -m 512M, 35s post-boot settle)",
+  "source": "qnx_veh_host.c (identical C source, -O2, Binary OP 'B')",
+  "ubuntu_24_04_kvm_guest": {
+    "os_info": {
+      "os": "Linux",
+      "release": "6.8.0-147-gener"
+    },
+    "results": [
+      {
+        "vehicles_per_zone": 200,
+        "fleet_3zone_equiv": 600,
+        "iters": 200,
+        "payload_bytes": 212885,
+        "rtt_p50_ms": 1.796,
+        "rtt_p95_ms": 61.108,
+        "rtt_p99_ms": 64.698,
+        "rtt_max_ms": 74.81,
+        "compute_p50_us": 187.0,
+        "compute_p99_us": 61377.0,
+        "compute_max_us": 72975.0
+      },
+      {
+        "vehicles_per_zone": 100,
+        "fleet_3zone_equiv": 300,
+        "iters": 200,
+        "payload_bytes": 106485,
+        "rtt_p50_ms": 0.629,
+        "rtt_p95_ms": 2.221,
+        "rtt_p99_ms": 63.098,
+        "rtt_max_ms": 65.072,
+        "compute_p50_us": 67.0,
+        "compute_p99_us": 168.0,
+        "compute_max_us": 180.0
+      },
+      {
+        "vehicles_per_zone": 50,
+        "fleet_3zone_equiv": 150,
+        "iters": 200,
+        "payload_bytes": 53285,
+        "rtt_p50_ms": 0.465,
+        "rtt_p95_ms": 1.26,
+        "rtt_p99_ms": 54.709,
+        "rtt_max_ms": 66.685,
+        "compute_p50_us": 47.0,
+        "compute_p99_us": 128.0,
+        "compute_max_us": 153.0
+      },
+      {
+        "vehicles_per_zone": 20,
+        "fleet_3zone_equiv": 60,
+        "iters": 200,
+        "payload_bytes": 21365,
+        "rtt_p50_ms": 0.372,
+        "rtt_p95_ms": 1.011,
+        "rtt_p99_ms": 66.54,
+        "rtt_max_ms": 69.171,
+        "compute_p50_us": 13.0,
+        "compute_p99_us": 63.0,
+        "compute_max_us": 145.0
+      }
+    ]
+  },
+  "qnx_8_0_0_kvm_guest": {
+    "os_info": {
+      "os": "QNX",
+      "release": "8.0.0"
+    },
+    "results": [
+      {
+        "vehicles_per_zone": 200,
+        "fleet_3zone_equiv": 600,
+        "iters": 200,
+        "payload_bytes": 212885,
+        "rtt_p50_ms": 10.547,
+        "rtt_p95_ms": 84.084,
+        "rtt_p99_ms": 88.259,
+        "rtt_max_ms": 89.286,
+        "compute_p50_us": 131.0,
+        "compute_p99_us": 78746.0,
+        "compute_max_us": 80176.0
+      },
+      {
+        "vehicles_per_zone": 100,
+        "fleet_3zone_equiv": 300,
+        "iters": 200,
+        "payload_bytes": 106485,
+        "rtt_p50_ms": 3.938,
+        "rtt_p95_ms": 75.61,
+        "rtt_p99_ms": 77.845,
+        "rtt_max_ms": 78.433,
+        "compute_p50_us": 40.0,
+        "compute_p99_us": 140.0,
+        "compute_max_us": 220.0
+      },
+      {
+        "vehicles_per_zone": 50,
+        "fleet_3zone_equiv": 150,
+        "iters": 200,
+        "payload_bytes": 53285,
+        "rtt_p50_ms": 1.871,
+        "rtt_p95_ms": 72.149,
+        "rtt_p99_ms": 74.268,
+        "rtt_max_ms": 75.621,
+        "compute_p50_us": 18.0,
+        "compute_p99_us": 48.0,
+        "compute_max_us": 102.0
+      },
+      {
+        "vehicles_per_zone": 20,
+        "fleet_3zone_equiv": 60,
+        "iters": 200,
+        "payload_bytes": 21365,
+        "rtt_p50_ms": 1.021,
+        "rtt_p95_ms": 2.138,
+        "rtt_p99_ms": 73.641,
+        "rtt_max_ms": 75.584,
+        "compute_p50_us": 9.0,
+        "compute_p99_us": 36.0,
+        "compute_max_us": 103.0
+      }
+    ]
+  }
+}
