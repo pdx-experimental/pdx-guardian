@@ -1,0 +1,234 @@
+
+non UEFI or UEFI+CSM boot
+ACPI table not found (0x4746434d)
+System behaves poorly without PCID support.
+overriding mask for controller 2, vector_base 0
+Startup complete
+Unable to start "uname" (2)
+slog2_api: cannot connect to slogger2 server...errno=No such file or directory
+qh: context: default:all=prefix/loc/~tid,~slog=notice,slog2=info,stderr=warning,~stdout=notice-notice
+qh: context: qh:slog2=info,stderr=warning
+qh: context: slm:slog2=info,stderr=warning
+qh: slogger2 does not appear to be running.  Registration will be attempted when it is running.
+qh: Waiting for /dev/slog2
+qh: slog2 config: 'high:pages=4,min_sev=warning,low:pages=8,default:pages=1' (defaults)
+slm: [COMMAND] startup 'all'
+slm: Component 'slog2': Mark active
+slm: Set state of component 'slog2' to 'starting'
+slm: Component 'pci-server': Mark active
+slm: Component 'pci-server-patchup': Mark active
+slm: Component 'devb': Mark active
+slm: Component 'root-fs': Mark active
+slm: Component 'random': Mark active
+slm: Component 'fsevmgr': Mark active
+slm: Component 'devc': Mark active
+slm: Component 'pipe': Mark active
+slm: Component 'dumper': Mark active
+slm: Component 'devc-pty': Mark active
+slm: Component 'io-sock': Mark active
+slm: Component 'network-init': Mark active
+slm: Component 'ssh': Mark active
+slm: Component 'qconn': Mark active
+slm: Component 'console': Mark active
+slm: Component 'mqueue': Mark active
+slm: Component 'post_start': Mark active
+slm: Component 'iousb': Mark active
+slm: Component 'set-host': Mark active
+slm: Component 'ca-trust-init': Mark active
+slm: Component 'pam': Mark active
+slm: Component 'apk_start': Mark active
+slm: [START] Component 'slog2'
+slm: Component 'slog2': Spawned process with pid 20483
+slm: Set state of component 'slog2' to 'waiting'
+slm: [WAITFOR] Component 'slog2'
+slm: Component 'slog2': Retry waitfor action
+Path=0 - Intel 82371SB
+ target=0 lun=0     Direct-Access(0) -          QEMU HARDDISK    Rev: 2.5+
+Path=1 - Intel 82371SB
+ target=0 lun=0            CD-ROM(5) - QEMU     QEMU DVD-ROM     Rev: 2.5+
+---> Mounting file systems
+---> Starting io-hid
+rm: /etc/ca-certificates/extracted: No such file or directory
+---> Starting Screen...
+   10.37s real     0.92s user     0.00s system
+Unable to access /dev/screen/
+   15.39s real     0.15s user     0.00s system
+---> waitfor /dev/screen (full_startup.sh) FAILED!
+---> /dev/screen check failed! NOT STARTING Full Screen Window Manager!!! ...
+---> calling first_startup_checks.sh
+Fontconfig warning: using without calling FcInit()
+Unable to access /dev/screen/
+   15.39s real     0.17s user     0.00s system
+---> waitfor /dev/screen/ failed.
+/system/etc/startup/post_startup.sh[62]: cannot create /dev/screen/command: No such file or directory
+---> Error Screen not available.  Sensor framework will not be started.
+
+To exit QEMU, type <ctrl>a x
+
+[?7hGenerating VNC server password file
+Process count:31
+screen_create_context: No such file or directory
+---> /dev/screen check failed! NOT STARTING Demolauncher!!! ...
+---> Configuring PAM
+login: root
+Password:
+
+
+ ██████╗           ██╗  ██╗
+██╔═══██╗          ╚██╗██╔╝  
+██║   ██║███╗   ██╗ ╚███╔╝                      Welcome to QNX 8.0 Non-Commercial!
+██║▄▄ ██║████╗  ██║ ██╔██╗   
+╚██████╔╝██╔██╗ ██║██╔╝ ██╗  
+ ╚══▀▀═╝ ██║╚██╗██║╚═╝  ╚═╝
+         ██║ ╚████║ ▄▖           ▌       
+         ╚═╝  ╚═══╝ ▙▖▌▌█▌▛▘▌▌▌▌▌▛▌█▌▛▘█▌
+                    ▙▖▚▘▙▖▌ ▙▌▚▚▘▌▌▙▖▌ ▙▖
+                            ▄▌           
+
+This QNX 8 target is now ready for your QNX applications. There are
+some sample applications included here to help you get started with
+development. Find the source code for most of them at gitlab.com/qnx.
+
+Here's how to run some of the bundled samples:
+
+|-------------------------------|----------------------------------------------------------|
+| $ gles2-gears                 | Displays hardware-rendered content using OpenGL ES 2.x.  |
+| $ gles2-maze                  | Shows how to use texture, vertex, and fragment shaders.  |
+| $ camera_example3_viewfinder  | Displays a simulated camera signal or live camera feed.  |
+| $ st                          | The default terminal. Run it to open a new instance.     |
+|-------------------------------|----------------------------------------------------------|
+
+(You can use ALT-TAB to switch between windows.)
+
+The apk package manager is now available to further customize your target software.
+
+To use, run:
+
+# sudo apk update
+
+to sync with the configured repositories, and then run:
+
+# apk list --available
+
+to see the list of available packages on the repositories, and then run:
+
+# sudo apk add [PACKAGE]
+
+, as required, to add more software.
+
+Note: The VNC server is now run by default.  It is setup with a default password=qnxuser.
+It is recommended you change the default password.  To change the password run:
+
+# sudo vncserv -password=<new-password>
+
+Have questions? Find the community in Discord at https://discord.gg/Jj4EkkrFTT,
+on Reddit at https://reddit.com/r/QNX, or log an issue at https://gitlab.com/qnx.
+[?2004h[root@qnxqemu ~]# mkdir -p /tmp/coex /data/pdx_guardian && cd /tmp/coex && curl -sf http://10.0.2.2:18080/qnx/guardian-gate/guardian_gate.elf -o guardian_gate.elf && curl -sf http://10.0.2.2:18080/qnx/guardian-gate/gate_submit.elf -o gate_submit.elf && curl -sf http://10.0.2.2:18080/tests/dsx_air_fleet/qnx_veh_host.elf -o qnx_veh_host.elf && curl -sf http://10.0.2.2:18080/simulator/fixtures/week2/t01_manifest_v11.bin -o t01_m.bin && curl -sf http://10.0.2.2:18080/simulator/fixtures/week2/t01_fw_v11.bin -o t01_fw.bin && curl -sf http://10.0.2.2:18080/simulator/fixtures/week2/t05_manifest_v12.bin -o t05_m.bin && curl -sf http://10.0.2.2:18080/simulator/fixtures/week2/t05_fw_v12.bin -o t05_fw.bin && chmod +x guardian_gate.elf gate_submit.elf qnx_veh_host.elf && echo '[' > /tmp/coex/specs.json && i=0; while [ $i -lt 50 ]; do   vid=$(printf 'veh-%03d' $i);   sep=','; [ $i -eq 49 ] && sep='';   echo "{\"vehicle_id\":\"$vid\",\"zone_id\":\"zone-a\",\"silent\":false}$sep" >> /tmp/coex/specs.json;   i=$((i+1)); done && echo ']' >> /tmp/coex/specs.json && ./qnx_veh_host.elf --host-id qnx-coex --zone-id zone-a --rx-port 9101 --rpc-port 8091 --gw-ip 127.0.0.1 --gw-port 9101 --specs-json /tmp/coex/specs.json --mode cooperative >/tmp/coex/veh.log 2>&1 & sleep 35 && echo '===QNX_MOUNT===' && mount && echo '===QNX_PIDIN===' && pidin -F '%a %b %N' | grep -E 'io-sock|qnx_veh|devb|slogger' && printf 'COEX_%s\n' 'READY'
+[?2004l[1] 1601563
+slm: Component 'ca-trust-init' (pid 159763) terminated by SLM due to waitfor timeout
+Not updating in init mode when /etc/ca-certificates/extracted already exists.
+===QNX_MOUNT===
+ifs on / type ifs 
+/dev/hd0t179 on /data type qnx6 
+/dev/hd0t177 on /boot type qnx6 
+/dev/hd0t178 on /usr type qnx6 
+/dev/shmem on /dev/shmem type shmem 
+===QNX_PIDIN===
+   20483   1 [01;31m[Kslogger[m[K2          
+   32773   1 [01;31m[Kdevb[m[K-eide         
+   32773   2 [01;31m[Kdevb[m[K-eide         
+   32773   3 [01;31m[Kdevb[m[K-eide         
+   32773   4 [01;31m[Kdevb[m[K-eide         
+   32773   5 [01;31m[Kdevb[m[K-eide         
+   32773   6 [01;31m[Kdevb[m[K-eide         
+   32773   7 [01;31m[Kdevb[m[K-eide         
+   32773   8 [01;31m[Kdevb[m[K-eide         
+   32773   9 [01;31m[Kdevb[m[K-eide         
+   32773  10 [01;31m[Kdevb[m[K-eide         
+   32773  11 [01;31m[Kdevb[m[K-eide         
+   32773  12 [01;31m[Kdevb[m[K-eide         
+   32773  13 [01;31m[Kdevb[m[K-eide         
+   32773  14 [01;31m[Kdevb[m[K-eide         
+   32773  15 [01;31m[Kdevb[m[K-eide         
+   32773  16 [01;31m[Kdevb[m[K-eide         
+   81931   1 [01;31m[Kio-sock[m[K           
+   81931   2 [01;31m[Kio-sock[m[K           
+   81931   3 [01;31m[Kio-sock[m[K           
+   81931   4 [01;31m[Kio-sock[m[K           
+   81931   5 [01;31m[Kio-sock[m[K           
+   81931   6 [01;31m[Kio-sock[m[K           
+   81931   7 [01;31m[Kio-sock[m[K           
+   81931   8 [01;31m[Kio-sock[m[K           
+   81931   9 [01;31m[Kio-sock[m[K           
+   81931  10 [01;31m[Kio-sock[m[K           
+   81931  11 [01;31m[Kio-sock[m[K           
+   81931  12 [01;31m[Kio-sock[m[K           
+   81931  13 [01;31m[Kio-sock[m[K           
+   81931  14 [01;31m[Kio-sock[m[K           
+   81931  15 [01;31m[Kio-sock[m[K           
+   81931  16 [01;31m[Kio-sock[m[K           
+   81931  17 [01;31m[Kio-sock[m[K           
+   81931  18 [01;31m[Kio-sock[m[K           
+   81931  19 [01;31m[Kio-sock[m[K           
+   81931  20 [01;31m[Kio-sock[m[K           
+   81931  21 [01;31m[Kio-sock[m[K           
+   81931  22 [01;31m[Kio-sock[m[K           
+   81931  23 [01;31m[Kio-sock[m[K           
+   81931  24 [01;31m[Kio-sock[m[K           
+   81931  25 [01;31m[Kio-sock[m[K           
+   81931  26 [01;31m[Kio-sock[m[K           
+   81931  27 [01;31m[Kio-sock[m[K           
+   81931  28 [01;31m[Kio-sock[m[K           
+   81931  29 [01;31m[Kio-sock[m[K           
+   81931  30 [01;31m[Kio-sock[m[K           
+   81931  31 [01;31m[Kio-sock[m[K           
+   81931  32 [01;31m[Kio-sock[m[K           
+   81931  33 [01;31m[Kio-sock[m[K           
+   81931  35 [01;31m[Kio-sock[m[K           
+   81931  36 [01;31m[Kio-sock[m[K           
+   81931  37 [01;31m[Kio-sock[m[K           
+   81931  38 [01;31m[Kio-sock[m[K           
+   81931  39 [01;31m[Kio-sock[m[K           
+ 1884190   1 [01;31m[Kqnx_veh[m[K_host.elf  
+ 1884190   2 [01;31m[Kqnx_veh[m[K_host.elf  
+COEX_READY
+[?2004h[root@qnxqemu /tmp/coex]# ./guardian_gate.elf --pubkey 7d1f0d1f1133b05f65e075aa4a687d8bccc31efd521db6fcc72e34bea7b3f8fa --version 10 --speed 72 >/tmp/coex/gate72.log 2>&1 & G72_PID=$!; waitfor /dev/pdxguardian 15; printf 'GATE72_%s\n' 'READY'; k=1; while [ $k -le 10 ]; do   echo "---ATTEMPT_${k}_$(date +%s)---"; ./gate_submit.elf t05_m.bin t05_fw.bin; sleep 0.08; k=$((k+1)); done; ./gate_submit.elf --status; kill $G72_PID 2>/dev/null; wait $G72_PID 2>/dev/null; printf 'PHASE2_OTA_%s\n' 'DONE'
+[?2004l[2] 4792335
+GATE72_READY
+-bash: date: command not found
+---ATTEMPT_1_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":1,"journal_hash":"505720bc354b6a0558fc298d7f09cdfaa0dc3995021b3813b180cbc0b33cf376","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_2_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":2,"journal_hash":"dc09c30ee3014056ba5c34c9131335f4aad159e08f298b09452d5dcc9c6b816e","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_3_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":3,"journal_hash":"3e0ff14c7ee1a0ba3a8e465aacee50985bdd40d6605908be9ad15b84de7ddae8","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_4_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":4,"journal_hash":"6d4a074eb8d328347d21182502a6ce673e1bf9f2667a694af489473e9bad43e9","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_5_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":5,"journal_hash":"137bfc14d25e18c6d66c34e6f807763cbae7fdf14505ea0802e2b7b2482aa96f","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_6_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":6,"journal_hash":"f3df6a9fd2afc9403d099f5bd6ea4dd2ed40a8671546567d50c9ccd635453e2a","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_7_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":7,"journal_hash":"f01fc8b062fd87c12b4f33b8b8710c9c6801d2d2854da82fee55a4ce1c39c7db","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_8_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":8,"journal_hash":"f92c6b4b497c42a3b1fb5f95b53fc1b525b809e27b86ab5dd56368cacd136383","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_9_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":9,"journal_hash":"acda4eb3b8171853978e9f22230c0400c998cc031fed1be2169c9dd3a313d1d4","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+-bash: date: command not found
+---ATTEMPT_10_---
+{"operation_id":"op-wk2-t05-speed-v12","decision":"DENY_NOT_STATIONARY","slot_status":"UNCHANGED_SLOT_A","active_version":10,"target_version":12,"journal_seq":10,"journal_hash":"9e24cd5ab085c8d2bbde2fb8effc197c60f2986154100858a34ab59d3b681c0a","payload_sha256":"4069c8e02d7c1338269d3302b1c8cc7b7cc1deb534371b93772298721b4a1faf"}
+{"status_query":true,"active_version":10,"active_slot":"SLOT_A","last_sequence_id":0,"journal_seq":10,"chain_valid":true,"reconcile_performed":false,"reconciled_op_id":"","reconciled_state":"","uncertain_locked":false,"last_hash":"9e24cd5ab085c8d2bbde2fb8effc197c60f2986154100858a34ab59d3b681c0a"}
+PHASE2_OTA_DONE
+[?2004h[root@qnxqemu /tmp/coex]# ./guardian_gate.elf --pubkey 7d1f0d1f1133b05f65e075aa4a687d8bccc31efd521db6fcc72e34bea7b3f8fa --version 10 --speed 0 >/tmp/coex/gate0.log 2>&1 & G0_PID=$!; waitfor /dev/pdxguardian 15; ./gate_submit.elf t01_m.bin t01_fw.bin; ./gate_submit.elf --status; kill $G0_PID 2>/dev/null; wait $G0_PID 2>/dev/null; printf 'COEX_ALL_%s\n' 'DONE'
+[?2004l[2] 5062671
+{"operation_id":"op-wk2-t01-valid-v11","decision":"ALLOW","slot_status":"STAGED_AND_ACTIVATED_SLOT_B","active_version":11,"target_version":11,"journal_seq":12,"journal_hash":"86fdf32798c1eae5c08a12d58369209616da71780e7ec289bfe187b4cf6cb923","payload_sha256":"7bc00a28181d18b9a1f049035995657e71ba4ac73338bd9110183f2e8a2557a0"}
+{"status_query":true,"active_version":11,"active_slot":"SLOT_B","last_sequence_id":1,"journal_seq":12,"chain_valid":true,"reconcile_performed":false,"reconciled_op_id":"","reconciled_state":"","uncertain_locked":false,"last_hash":"86fdf32798c1eae5c08a12d58369209616da71780e7ec289bfe187b4cf6cb923"}
+COEX_ALL_DONE

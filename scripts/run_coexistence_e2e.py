@@ -5,11 +5,14 @@ Runs BOTH pillars simultaneously inside a single QNX 8.0.0 guest:
   1. In-Motion Cooperative Driving-Plan Exchange (qnx_veh_host.elf, N=50/zone, binary STEP_BATCH + UDP DrivingIntentV2)
   2. Stationary-Interlocked OTA Gate (/dev/pdxguardian via guardian_gate.elf + gate_submit.elf)
 
-Phases:
-  - Phase 1 (Baseline): In-motion STEP_BATCH (200 iters) with OTA gate idle.
+Phases (after 35s post-boot settle):
+  - Captures `mount` (fs-qnx6) and `pidin` (io-sock / active processes) evidence.
+  - Phase 1 (Baseline 1): In-motion STEP_BATCH (200 iters) with OTA gate idle.
   - Phase 2 (Concurrent In-Motion OTA Rejection): In-motion STEP_BATCH (200 iters) while
-    guardian_gate.elf (--speed 72) processes 5 signed OTA submissions (all fail-closed).
-  - Phase 3 (Parked Activation): Vehicle parked (--speed 0), valid signed OTA (t01_m.bin)
+    guardian_gate.elf (--speed 72) processes 10 signed OTA submissions (all fail-closed),
+    with host wall-clock timestamps proving overlap with the STEP_BATCH window.
+  - Phase 3 (Baseline 2, Post-OTA Steady-State): In-motion STEP_BATCH (200 iters) with OTA gate idle.
+  - Phase 4 (Parked Activation): Vehicle parked (--speed 0), valid signed OTA (t01_m.bin)
     is admitted (ALLOW, active_ver=11) with hash-chained journal verified.
 """
 
@@ -20,7 +23,6 @@ import http.server
 import json
 import math
 import os
-import re
 import socket
 import socketserver
 import struct
@@ -153,6 +155,7 @@ def run_step_batch_phase(port: int, n_vehs: int, iters: int, warmup: int) -> dic
             conn.sendall(struct.pack(">I", len(pl)) + pl)
             recv_msg(conn)
 
+        t_start = time.time()
         compute_us: list[float] = []
         os_name = ""
         os_rel = ""
@@ -167,6 +170,7 @@ def run_step_batch_phase(port: int, n_vehs: int, iters: int, warmup: int) -> dic
                 os_rel = resp[17:33].split(b"\x00", 1)[0].decode("utf-8", "replace")
             c_us = struct.unpack("<q", resp[41:49])[0]
             compute_us.append(float(c_us))
+        t_end = time.time()
 
         send_msg(conn, {"op": "GET_SUMMARY"})
         summary = json.loads(recv_msg(conn).decode("utf-8"))
@@ -179,6 +183,8 @@ def run_step_batch_phase(port: int, n_vehs: int, iters: int, warmup: int) -> dic
             "n_vehs_per_zone": n_vehs,
             "fleet_equiv": n_vehs * 3,
             "iters": iters,
+            "window_start_epoch_s": round(t_start, 3),
+            "window_end_epoch_s": round(t_end, 3),
             "compute_p50_us": pct(compute_us, 50),
             "compute_p95_us": pct(compute_us, 95),
             "compute_p99_us": pct(compute_us, 99),
@@ -195,7 +201,7 @@ def main() -> int:
     parser.add_argument("--workspace", required=True)
     parser.add_argument("--disk", required=True)
     parser.add_argument("--qemu-bin", default="qemu-system-x86_64")
-    parser.add_argument("--accel", default="whpx", choices=["tcg", "whpx", "kvm"])
+    parser.add_argument("--accel", default="tcg", choices=["tcg", "whpx", "kvm"])
     parser.add_argument("--cpu", default="max")
     parser.add_argument("--n-vehs", type=int, default=50)
     parser.add_argument("--iters", type=int, default=200)
@@ -274,12 +280,17 @@ def main() -> int:
             "done && echo ']' >> /tmp/coex/specs.json && "
             "./qnx_veh_host.elf --host-id qnx-coex --zone-id zone-a --rx-port 9101 --rpc-port 8091 "
             "--gw-ip 127.0.0.1 --gw-port 9101 --specs-json /tmp/coex/specs.json --mode cooperative >/tmp/coex/veh.log 2>&1 & "
-            "sleep 25 && printf 'COEX_%s\\n' 'READY'\n"
+            "sleep 35 && "
+            "echo '===QNX_MOUNT===' && mount && "
+            "echo '===QNX_PIDIN===' && pidin -F '%a %b %N' | grep -E 'io-sock|qnx_veh|devb|slogger' && "
+            "printf 'COEX_%s\\n' 'READY'\n"
         ).encode("ascii")
         sock.sendall(setup_cmd)
-        chunks.append(read_until(sock, [b"COEX_READY"], timeout=90.0))
+        setup_out = read_until(sock, [b"COEX_READY"], timeout=120.0)
+        chunks.append(setup_out)
+        setup_text = setup_out.decode("utf-8", errors="replace")
 
-        print("[Coexistence E2E] Phase 1: Baseline In-Motion STEP_BATCH (OTA idle)...", flush=True)
+        print("[Coexistence E2E] Phase 1: Baseline 1 In-Motion STEP_BATCH (OTA idle)...", flush=True)
         phase1 = run_step_batch_phase(18091, args.n_vehs, args.iters, warmup=100)
 
         print("[Coexistence E2E] Phase 2: Concurrent In-Motion STEP_BATCH + speed=72 km/h OTA attempts...", flush=True)
@@ -288,7 +299,7 @@ def main() -> int:
             "G72_PID=$!; waitfor /dev/pdxguardian 15; "
             "printf 'GATE72_%s\\n' 'READY'; "
             "k=1; while [ $k -le 10 ]; do "
-            "  echo \"---ATTEMPT_$k---\"; ./gate_submit.elf t05_m.bin t05_fw.bin; sleep 0.08; k=$((k+1)); "
+            "  echo \"---ATTEMPT_${k}_$(date +%s)---\"; ./gate_submit.elf t05_m.bin t05_fw.bin; sleep 0.08; k=$((k+1)); "
             "done; "
             "./gate_submit.elf --status; "
             "kill $G72_PID 2>/dev/null; wait $G72_PID 2>/dev/null; "
@@ -296,12 +307,17 @@ def main() -> int:
         ).encode("ascii")
         sock.sendall(ota_inmotion_cmd)
         chunks.append(read_until(sock, [b"GATE72_READY"], timeout=45.0))
+        ota_dispatch_epoch = round(time.time(), 3)
         phase2 = run_step_batch_phase(18091, args.n_vehs, args.iters, warmup=10)
         p2_out = read_until(sock, [b"PHASE2_OTA_DONE"], timeout=60.0)
+        ota_complete_epoch = round(time.time(), 3)
         chunks.append(p2_out)
         p2_text = p2_out.decode("utf-8", errors="replace")
 
-        print("[Coexistence E2E] Phase 3: Parked (speed=0 km/h) OTA Activation...", flush=True)
+        print("[Coexistence E2E] Phase 3: Baseline 2 In-Motion STEP_BATCH (Post-OTA idle steady-state)...", flush=True)
+        phase3_b2 = run_step_batch_phase(18091, args.n_vehs, args.iters, warmup=20)
+
+        print("[Coexistence E2E] Phase 4: Parked (speed=0 km/h) OTA Activation...", flush=True)
         ota_parked_cmd = (
             "./guardian_gate.elf --pubkey " + pubkey_hex + " --version 10 --speed 0 >/tmp/coex/gate0.log 2>&1 & "
             "G0_PID=$!; waitfor /dev/pdxguardian 15; "
@@ -311,11 +327,10 @@ def main() -> int:
             "printf 'COEX_ALL_%s\\n' 'DONE'\n"
         ).encode("ascii")
         sock.sendall(ota_parked_cmd)
-        p3_out = read_until(sock, [b"COEX_ALL_DONE"], timeout=60.0)
-        chunks.append(p3_out)
-        p3_text = p3_out.decode("utf-8", errors="replace")
+        p4_out = read_until(sock, [b"COEX_ALL_DONE"], timeout=60.0)
+        chunks.append(p4_out)
+        p4_text = p4_out.decode("utf-8", errors="replace")
 
-        # Shutdown qnx_veh_host cleanly
         c = socket.create_connection(("127.0.0.1", 18091), timeout=5.0)
         send_msg(c, {"op": "SHUTDOWN"})
         recv_msg(c)
@@ -331,27 +346,38 @@ def main() -> int:
 
     deny_count = p2_text.count('"decision":"DENY_NOT_STATIONARY"')
     parked_allow = (
-        '"decision":"ALLOW"' in p3_text
-        and '"active_version":11' in p3_text
-        and '"active_slot":"SLOT_B"' in p3_text
-        and '"chain_valid":true' in p3_text
+        '"decision":"ALLOW"' in p4_text
+        and '"active_version":11' in p4_text
+        and '"active_slot":"SLOT_B"' in p4_text
+        and '"chain_valid":true' in p4_text
     )
+
+    mount_block = ""
+    pidin_block = ""
+    if "===QNX_MOUNT===" in setup_text and "===QNX_PIDIN===" in setup_text:
+        mount_block = setup_text.split("===QNX_MOUNT===", 1)[1].split("===QNX_PIDIN===", 1)[0].strip()
+        pidin_block = setup_text.split("===QNX_PIDIN===", 1)[1].split("COEX_READY", 1)[0].strip()
 
     result = {
         "experiment": "dual_pillar_coexistence_qnx8",
         "guest": f"QNX 8.0.0 QEMU (-accel {args.accel}, -smp 2, -m 2G)",
-        "phase1_inmotion_baseline": phase1,
+        "qnx_mount_evidence": mount_block,
+        "qnx_pidin_evidence": pidin_block,
+        "phase1_inmotion_baseline_1": phase1,
         "phase2_inmotion_concurrent_ota_72kmh": {
             **phase2,
             "ota_attempts": 10,
             "ota_speed_kmh": 72,
             "deny_not_stationary_count": deny_count,
+            "ota_dispatch_epoch_s": ota_dispatch_epoch,
+            "ota_complete_epoch_s": ota_complete_epoch,
             "phase2_output_excerpt": p2_text.strip(),
         },
-        "phase3_parked_ota_0kmh": {
+        "phase3_inmotion_baseline_2_post_ota": phase3_b2,
+        "phase4_parked_ota_0kmh": {
             "ota_speed_kmh": 0,
             "parked_allow_v11": parked_allow,
-            "phase3_output_excerpt": p3_text.strip(),
+            "phase4_output_excerpt": p4_text.strip(),
         },
     }
     (out_dir / "qnx_coexistence_results.json").write_text(json.dumps(result, indent=2), encoding="utf-8")

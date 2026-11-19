@@ -1,0 +1,23 @@
+{
+  "experiment": "sumo_negative_control_60v",
+  "cooperative": {
+    "mode": "cooperative",
+    "seed": 42,
+    "vehicles": 60,
+    "speed_mode": 7,
+    "stale_replay_packets_injected": 20,
+    "stale_dropped": 1180,
+    "stale_accepted": 0,
+    "collisions": 0
+  },
+  "trust_stale_negative_control": {
+    "mode": "trust_stale",
+    "seed": 42,
+    "vehicles": 60,
+    "speed_mode": 7,
+    "stale_replay_packets_injected": 20,
+    "stale_dropped": 0,
+    "stale_accepted": 1180,
+    "collisions": 1
+  }
+}

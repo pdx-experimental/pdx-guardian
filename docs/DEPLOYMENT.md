@@ -5,7 +5,7 @@
 * **QNX 8.0 Cross-Compilation**:
   * Uses local QNX SDP 8.0 (`qnxsdp-env.bat` + `qcc -Vgcc_ntox86_64`) to compile native QNX x86_64 ELF binaries.
 * **Host Orchestrator & Verification Container**:
-  * Python 3.12+ virtual environment with pinned PyPI dependencies (`pdx-artifact-engine==0.3.0a12`, `prodocux==0.3.0rc11`).
+  * Python 3.10+ (container) or 3.12+ (CI & Host) virtual environment with pinned PyPI dependencies (`pdx-artifact-engine==0.3.0a12`, `prodocux==0.3.0rc11`).
   * `docker/Dockerfile.qnx-builder` (Ubuntu 22.04 + `qemu-system-x86`) to orchestrate QNX 8.0 QSTI (`disk-qemu.qcow2`) end-to-end runs.
 
 ---

@@ -49,6 +49,7 @@ dist/
 
 # Logs & Test outputs
 *.log
+!evidence/**/*.log
 runtime_metrics.csv
 evidence/**/*.pdf
 evidence/**/*.csv
