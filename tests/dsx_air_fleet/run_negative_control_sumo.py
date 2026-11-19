@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """
-Negative Control Experiment (SUMO 1.28+ TraCI, 60 Vehicles, Partition 5.5s-7.5s)
-Compares:
-  1. cooperative (PDX Guardian fail-closed: drops stale packets, enforces stopping-distance fallback)
-  2. trust_stale (negative control: accepts stale/expired intents, skips stopping-distance fallback)
-Both arms use SUMO speedMode=0 (disabling SUMO's built-in junction collision-avoidance override)
-so the safety arbiter's own decisions govern intersection entry.
+Host-Side Python Reference Negative Control (SUMO 1.28+ TraCI, 60 Vehicles, 10 Seeds)
+Note: Evaluates the host-side Python reference model (InProcessVehicleNode in intent_protocol.py),
+not the C qnx_veh_host.c binary.
+Compares 3 arms across seeds 42..51 under a 5.5s-7.5s partition + 20 stale replay packets:
+  1. cooperative             (rejects stale packets, enforces stopping-distance fallback)
+  2. accept_stale_only       (accepts stale packets, keeps stopping-distance fallback)
+  3. trust_stale_no_fallback (accepts stale packets, skips stopping-distance fallback)
+All arms use SUMO speedMode=7 (keeps longitudinal car-following while disabling SUMO's
+built-in junction right-of-way and red-light overrides so arbiter decisions govern entry).
 """
 
 from __future__ import annotations
 
 import json
-import os
 import tempfile
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -20,14 +22,7 @@ import traci
 
 from intent_protocol import (
     BROADCAST_PERIOD_MS,
-    OCCLUSION_VIS_CLEAR_M,
     STEP_MS,
-    TTL_MS,
-    has_higher_right_of_way,
-    movements_conflict,
-    required_stopping_distance_m,
-    right_of_way_class,
-    time_windows_overlap,
 )
 from run_60v_experiment import InProcessVehicleNode as VehicleNode, generate_60v_routes
 
@@ -36,16 +31,13 @@ NET_XML = FLEET_DIR / "sumo_net" / "j1.net.xml"
 OUT_JSON = FLEET_DIR / "out_sumo_baseline" / "sumo_negative_control_results.json"
 
 
-def run_arm(mode: str, seed: int = 42) -> dict:
+def run_arm(mode: str, seed: int) -> dict:
     with tempfile.TemporaryDirectory(prefix=f"pdx_neg_{mode}_", ignore_cleanup_errors=True) as td:
         td_path = Path(td)
         rou_xml = td_path / "routes.rou.xml"
         col_xml = td_path / "collisions.xml"
         specs = generate_60v_routes(seed, rou_xml)
-        nodes = {
-            s["vehicle_id"]: VehicleNode(s, "cooperative")
-            for s in specs
-        }
+        nodes = {s["vehicle_id"]: VehicleNode(s, "cooperative") for s in specs}
 
         sumo_cmd = [
             "sumo",
@@ -81,7 +73,6 @@ def run_arm(mode: str, seed: int = 42) -> dict:
 
                 in_partition = (partition_start <= sim_ms < partition_end)
 
-                # Broadcast & collect intents
                 for vid in active_ids:
                     node = nodes[vid]
                     if node.silent:
@@ -109,10 +100,10 @@ def run_arm(mode: str, seed: int = 42) -> dict:
                                         r_node.last_seen_seq[vid] = pkt.seq
                                         r_node.peer_intents[vid] = pkt
                                 else:
-                                    stale_accepted += 1 if pkt.seq <= r_node.last_seen_seq.get(vid, 0) else 0
+                                    if pkt.seq <= r_node.last_seen_seq.get(vid, 0):
+                                        stale_accepted += 1
                                     r_node.peer_intents[vid] = pkt
 
-                # Inject 20 stale replay packets right at partition end
                 if sim_ms == partition_end and replay_buf:
                     for rpkt in replay_buf:
                         stale_injected += 1
@@ -126,7 +117,6 @@ def run_arm(mode: str, seed: int = 42) -> dict:
                                 stale_accepted += 1
                                 r_node.peer_intents[rpkt.vehicle_id] = rpkt
 
-                # Decide vehicle speeds
                 for vid in active_ids:
                     node = nodes[vid]
                     edge = traci.vehicle.getRoadID(vid)
@@ -137,11 +127,9 @@ def run_arm(mode: str, seed: int = 42) -> dict:
                         lane_id = traci.vehicle.getLaneID(vid)
                         d_cz = max(0.0, traci.lane.getLength(lane_id) - traci.vehicle.getLanePosition(vid))
 
-                    if mode == "cooperative":
-                        vis = []
-                        cmd_v, _, _ = node.step_decide(sim_ms, spd, d_cz, approaching, vis, partition_end)
+                    if mode in ("cooperative", "accept_stale_only"):
+                        cmd_v, _, _ = node.step_decide(sim_ms, spd, d_cz, approaching, [], partition_end)
                     else:
-                        # Negative control: trust stale/expired intents and skip stopping-distance fallback
                         cmd_v = 13.89
                     traci.vehicle.setSpeed(vid, cmd_v)
         finally:
@@ -149,28 +137,39 @@ def run_arm(mode: str, seed: int = 42) -> dict:
 
         collisions = len(ET.parse(col_xml).getroot().findall("collision")) if col_xml.exists() else 0
         return {
-            "mode": mode,
             "seed": seed,
-            "vehicles": 60,
-            "speed_mode": 7,
             "stale_replay_packets_injected": stale_injected,
             "stale_dropped": stale_dropped,
-            "stale_accepted": stale_accepted,
+            "stale_accepted_deliveries": stale_accepted,
             "collisions": collisions,
         }
 
 
 def main() -> int:
-    coop = run_arm("cooperative", seed=42)
-    neg = run_arm("trust_stale", seed=42)
+    seeds = list(range(42, 52))
+    arms = ["cooperative", "accept_stale_only", "trust_stale_no_fallback"]
+    results = {arm: [run_arm(arm, s) for s in seeds] for arm in arms}
+    summary = {
+        arm: {
+            "seeds_run": len(runs),
+            "seeds_with_collisions": sum(1 for r in runs if r["collisions"] > 0),
+            "total_collisions": sum(r["collisions"] for r in runs),
+            "total_stale_dropped": sum(r["stale_dropped"] for r in runs),
+            "total_stale_accepted_deliveries": sum(r["stale_accepted_deliveries"] for r in runs),
+        }
+        for arm, runs in results.items()
+    }
     out = {
-        "experiment": "sumo_negative_control_60v",
-        "cooperative": coop,
-        "trust_stale_negative_control": neg,
+        "experiment": "sumo_negative_control_60v_10seeds",
+        "model": "Host-side Python reference model (InProcessVehicleNode, intent_protocol.py)",
+        "speed_mode": 7,
+        "seeds": seeds,
+        "summary": summary,
+        "runs": results,
     }
     OUT_JSON.parent.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(json.dumps(out, indent=2), encoding="utf-8")
-    print(json.dumps(out, indent=2))
+    print(json.dumps(summary, indent=2))
     return 0
 
 

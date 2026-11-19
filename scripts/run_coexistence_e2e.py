@@ -23,6 +23,7 @@ import http.server
 import json
 import math
 import os
+import re
 import socket
 import socketserver
 import struct
@@ -204,7 +205,7 @@ def main() -> int:
     parser.add_argument("--accel", default="tcg", choices=["tcg", "whpx", "kvm"])
     parser.add_argument("--cpu", default="max")
     parser.add_argument("--n-vehs", type=int, default=50)
-    parser.add_argument("--iters", type=int, default=200)
+    parser.add_argument("--iters", type=int, default=600)
     args = parser.parse_args()
 
     workspace_dir = Path(args.workspace).resolve()
@@ -281,8 +282,8 @@ def main() -> int:
             "./qnx_veh_host.elf --host-id qnx-coex --zone-id zone-a --rx-port 9101 --rpc-port 8091 "
             "--gw-ip 127.0.0.1 --gw-port 9101 --specs-json /tmp/coex/specs.json --mode cooperative >/tmp/coex/veh.log 2>&1 & "
             "sleep 35 && "
-            "echo '===QNX_MOUNT===' && mount && "
-            "echo '===QNX_PIDIN===' && pidin -F '%a %b %N' | grep -E 'io-sock|qnx_veh|devb|slogger' && "
+            "printf '===QNX_%s===\\n' 'MOUNT' && mount && "
+            "printf '===QNX_%s===\\n' 'PIDIN' && pidin -F '%a %b %N' | grep -E --color=never 'io-sock|qnx_veh|devb|slogger' && "
             "printf 'COEX_%s\\n' 'READY'\n"
         ).encode("ascii")
         sock.sendall(setup_cmd)
@@ -299,7 +300,7 @@ def main() -> int:
             "G72_PID=$!; waitfor /dev/pdxguardian 15; "
             "printf 'GATE72_%s\\n' 'READY'; "
             "k=1; while [ $k -le 10 ]; do "
-            "  echo \"---ATTEMPT_${k}_$(date +%s)---\"; ./gate_submit.elf t05_m.bin t05_fw.bin; sleep 0.08; k=$((k+1)); "
+            "  echo \"---ATTEMPT_${k}---\"; ./gate_submit.elf t05_m.bin t05_fw.bin; sleep 0.08; k=$((k+1)); "
             "done; "
             "./gate_submit.elf --status; "
             "kill $G72_PID 2>/dev/null; wait $G72_PID 2>/dev/null; "
@@ -352,11 +353,12 @@ def main() -> int:
         and '"chain_valid":true' in p4_text
     )
 
+    clean_setup = re.sub(r"\x1b\[[0-9;?]*[a-zA-Z]", "", setup_text).replace("\r\n", "\n")
     mount_block = ""
     pidin_block = ""
-    if "===QNX_MOUNT===" in setup_text and "===QNX_PIDIN===" in setup_text:
-        mount_block = setup_text.split("===QNX_MOUNT===", 1)[1].split("===QNX_PIDIN===", 1)[0].strip()
-        pidin_block = setup_text.split("===QNX_PIDIN===", 1)[1].split("COEX_READY", 1)[0].strip()
+    if "===QNX_MOUNT===" in clean_setup and "===QNX_PIDIN===" in clean_setup:
+        mount_block = clean_setup.split("===QNX_MOUNT===", 1)[1].split("===QNX_PIDIN===", 1)[0].strip()
+        pidin_block = clean_setup.split("===QNX_PIDIN===", 1)[1].split("COEX_READY", 1)[0].strip()
 
     result = {
         "experiment": "dual_pillar_coexistence_qnx8",

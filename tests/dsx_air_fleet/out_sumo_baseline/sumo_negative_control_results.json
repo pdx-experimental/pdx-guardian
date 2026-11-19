@@ -1,23 +1,258 @@
 {
-  "experiment": "sumo_negative_control_60v",
-  "cooperative": {
-    "mode": "cooperative",
-    "seed": 42,
-    "vehicles": 60,
-    "speed_mode": 7,
-    "stale_replay_packets_injected": 20,
-    "stale_dropped": 1180,
-    "stale_accepted": 0,
-    "collisions": 0
+  "experiment": "sumo_negative_control_60v_10seeds",
+  "model": "Host-side Python reference model (InProcessVehicleNode, intent_protocol.py)",
+  "speed_mode": 7,
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51
+  ],
+  "summary": {
+    "cooperative": {
+      "seeds_run": 10,
+      "seeds_with_collisions": 0,
+      "total_collisions": 0,
+      "total_stale_dropped": 11800,
+      "total_stale_accepted_deliveries": 0
+    },
+    "accept_stale_only": {
+      "seeds_run": 10,
+      "seeds_with_collisions": 0,
+      "total_collisions": 0,
+      "total_stale_dropped": 0,
+      "total_stale_accepted_deliveries": 11800
+    },
+    "trust_stale_no_fallback": {
+      "seeds_run": 10,
+      "seeds_with_collisions": 2,
+      "total_collisions": 2,
+      "total_stale_dropped": 0,
+      "total_stale_accepted_deliveries": 11800
+    }
   },
-  "trust_stale_negative_control": {
-    "mode": "trust_stale",
-    "seed": 42,
-    "vehicles": 60,
-    "speed_mode": 7,
-    "stale_replay_packets_injected": 20,
-    "stale_dropped": 0,
-    "stale_accepted": 1180,
-    "collisions": 1
+  "runs": {
+    "cooperative": [
+      {
+        "seed": 42,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 43,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 44,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 45,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 46,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 47,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 48,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 49,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 50,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      },
+      {
+        "seed": 51,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 1180,
+        "stale_accepted_deliveries": 0,
+        "collisions": 0
+      }
+    ],
+    "accept_stale_only": [
+      {
+        "seed": 42,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 43,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 44,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 45,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 46,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 47,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 48,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 49,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 50,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 51,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      }
+    ],
+    "trust_stale_no_fallback": [
+      {
+        "seed": 42,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 1
+      },
+      {
+        "seed": 43,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 44,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 45,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 46,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 1
+      },
+      {
+        "seed": 47,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 48,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 49,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 50,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      },
+      {
+        "seed": 51,
+        "stale_replay_packets_injected": 20,
+        "stale_dropped": 0,
+        "stale_accepted_deliveries": 1180,
+        "collisions": 0
+      }
+    ]
   }
 }

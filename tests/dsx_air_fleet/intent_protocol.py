@@ -186,3 +186,6 @@ class DrivingIntentV1:
             return obj
         except Exception:
             return None
+
+
+DrivingIntentV2 = DrivingIntentV1
