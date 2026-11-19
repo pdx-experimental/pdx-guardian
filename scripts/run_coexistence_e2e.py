@@ -5,13 +5,13 @@ Runs BOTH pillars simultaneously inside a single QNX 8.0.0 guest:
   1. In-Motion Cooperative Driving-Plan Exchange (qnx_veh_host.elf, N=50/zone, binary STEP_BATCH + UDP DrivingIntentV2)
   2. Stationary-Interlocked OTA Gate (/dev/pdxguardian via guardian_gate.elf + gate_submit.elf)
 
-Phases (after 35s post-boot settle):
+Phases (after 35s post-boot settle; default --iters 600):
   - Captures `mount` (fs-qnx6) and `pidin` (io-sock / active processes) evidence.
-  - Phase 1 (Baseline 1): In-motion STEP_BATCH (200 iters) with OTA gate idle.
-  - Phase 2 (Concurrent In-Motion OTA Rejection): In-motion STEP_BATCH (200 iters) while
+  - Phase 1 (Baseline 1): In-motion STEP_BATCH (600 iters, 100 warmup) with OTA gate idle.
+  - Phase 2 (Concurrent In-Motion OTA Rejection): In-motion STEP_BATCH (600 iters, 10 warmup) while
     guardian_gate.elf (--speed 72) processes 10 signed OTA submissions (all fail-closed),
     with host wall-clock timestamps proving overlap with the STEP_BATCH window.
-  - Phase 3 (Baseline 2, Post-OTA Steady-State): In-motion STEP_BATCH (200 iters) with OTA gate idle.
+  - Phase 3 (Baseline 2, Post-OTA Steady-State): In-motion STEP_BATCH (600 iters, 20 warmup) with OTA gate idle.
   - Phase 4 (Parked Activation): Vehicle parked (--speed 0), valid signed OTA (t01_m.bin)
     is admitted (ALLOW, active_ver=11) with hash-chained journal verified.
 """
